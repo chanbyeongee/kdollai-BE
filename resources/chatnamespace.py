@@ -6,11 +6,11 @@ class ChatNamespace(Namespace):
 
     def on_connect(self):
         print("Client connected",)
-        sessioned= session.get()
+        #sessioned= session.get()
 
     def on_disconnect(self):
         print("Client disconnected", )
-        sessioned = session.get()
+        #sessioned = session.get()
 
     def on_message(self,data):
         print(data)

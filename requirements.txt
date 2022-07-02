@@ -6,6 +6,7 @@ Flask-SocketIO
 Werkzeug
 uwsgi
 tensorflow-cpu
+tensorflow_datasets
 transformers
 gdown
 pandas
