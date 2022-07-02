@@ -1,6 +1,6 @@
 from flask_socketio import Namespace, emit
 from flask import session, request
-from packages.k_doll_ai_chatbot import *
+from packages.k_doll_ai_chatbot.transformer_models.aimodel import AIModel
 
 class ChatNamespace(Namespace):
 
