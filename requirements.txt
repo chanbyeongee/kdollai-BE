@@ -1,0 +1,11 @@
+Flask
+Flask-JWT-extended
+Flask-RESTful
+Flask-SQLAlchemy
+Flask-SocketIO
+Werkzeug
+uwsgi
+tensorflow==2.7.1
+transformers
+gdown
+pandas

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/packages/k-doll-ai-chatbot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/packages/k_doll_ai_chatbot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/site-packages/k-doll-ai-chatbot" vcs="Git" />
+  </component>
+</project>
