@@ -40,7 +40,7 @@ def download_weights():
         gdown.download(loaded["EMO-index-url"], output, quiet=False)
 
     if not os.path.isfile(weight_path+"/Emo_weights/checkpoint") or Emo_flag:
-        print("Downloading Emo pretrained index...")
+        print("Downloading Emo checkpoint...")
         output = weight_path+"/Emo_weights/checkpoint"
         gdown.download(loaded["EMO-check-url"], output, quiet=False)
 
@@ -55,7 +55,7 @@ def download_weights():
         gdown.download(loaded["NER-index-url"], output, quiet=False)
 
     if not os.path.isfile(weight_path+"/NER_weights/checkpoint") or NER_flag:
-        print("Downloading Emo pretrained index...")
+        print("Downloading NER checkpoint...")
         output = weight_path+"/Emo_weights/checkpoint"
         gdown.download(loaded["NER-check-url"], output, quiet=False)
 
@@ -70,7 +70,7 @@ def download_weights():
         gdown.download(loaded["Transformer-index-url"], output, quiet=False)
 
     if not os.path.isfile(weight_path+"/Transformer_weights/checkpoint") or Transformer_flag:
-        print("Downloading Emo pretrained index...")
+        print("Downloading Transformer checkpoint...")
         output = weight_path+"/Transformer_weights/checkpoint"
         gdown.download(loaded["Transformer-check-url"], output, quiet=False)
 

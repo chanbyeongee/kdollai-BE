@@ -55,7 +55,7 @@ class AIModel:
             num_heads=NUM_HEADS,
             dropout=DROPOUT)
 
-        new_model.load_weights(os.environ['CHATBOT_ROOT']+"/resources/weights/Transformer_weights")
+        new_model.load_weights(os.environ['CHATBOT_ROOT']+"/resources/weights/Transformer_weights/Transformer_weights")
 
         return new_model
 
@@ -63,14 +63,14 @@ class AIModel:
         tag_size = len(AIModel.NER_labels)
 
         new_model = TokenClassification("klue/bert-base", labels=tag_size+1)
-        new_model.load_weights(os.environ['CHATBOT_ROOT']+"/resources/weights/NER_weights")
+        new_model.load_weights(os.environ['CHATBOT_ROOT']+"/resources/weights/NER_weights/NER_weights")
 
         return new_model
 
     def _load_Emo_model(self):
 
         new_model = SequenceClassification("klue/bert-base", num_labels=len(AIModel.emotion_labels))
-        new_model.load_weights(os.environ['CHATBOT_ROOT']+"/resources/weights/Emo_weights")
+        new_model.load_weights(os.environ['CHATBOT_ROOT']+"/resources/weights/Emo_weights/Emo_weights")
 
         return new_model
 
