@@ -5,7 +5,7 @@ Flask-SQLAlchemy
 Flask-SocketIO
 Werkzeug
 uwsgi
-tensorflow-cpu==2.1.0
+tensorflow-cpu==2.7.1
 tensorflow_datasets
 transformers
 gdown
