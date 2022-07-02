@@ -82,4 +82,4 @@ if __name__ == "__main__":
     db.init_app(app)
     #app.run(port=3001,debug=True) #debug tells us what is problem
     print("Now we Run...")
-    sock.run(app,port=5000,debug=True,host='0.0.0.0')
+    sock.run(app,port=5000,debug=False)
