@@ -10,5 +10,5 @@ tensorflow_datasets
 transformers
 gdown
 scikit-learn
-https://download.pytorch.org/whl/cpu/torch-1.10.2-cp38-cp38-manylinux2014_aarch64.whl
+https://download.pytorch.org/whl/cpu/torch-1.1.0-cp27-cp27m-linux_x86_64.whl
 gevent-websocket
