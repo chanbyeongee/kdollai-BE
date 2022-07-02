@@ -9,3 +9,4 @@ tensorflow-cpu
 transformers
 gdown
 pandas
+scikit-learn
