@@ -5,10 +5,10 @@ Flask-SQLAlchemy
 Flask-SocketIO
 Werkzeug
 uwsgi
-tensorflow-cpu
+tensorflow-cpu==2.1.0
 tensorflow_datasets
 transformers
 gdown
 scikit-learn
-https://download.pytorch.org/whl/cpu/torch-1.8.1%2Bcpu-cp39-cp39-linux_x86_64.whl
+torch==1.11.0+cpu
 gevent-websocket
