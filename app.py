@@ -4,11 +4,16 @@ from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO
 from resources import create_api, create_socketio
 from resources.config.configure import config
+from packages.k_doll_ai_chatbot.transformer_models.aimodel import AIModel
+
 
 from db import db
 
 #SECRET_KEY = config['DEFAULT']['SECRET_KEY']
 #db_name = config['DEFAULT']['DB_NAME']+'.db'
+
+main_ai = AIModel()
+main_ai.model_loader()
 
 SECRET_KEY = "chan"
 db_name="chatbot"

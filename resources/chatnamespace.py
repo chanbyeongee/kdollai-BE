@@ -1,23 +1,22 @@
 from flask_socketio import Namespace, emit
 from flask import session, request
-from packages.k_doll_ai_chatbot.transformer_models.aimodel import AIModel
+from app import main_ai
 
 class ChatNamespace(Namespace):
-
-    main_ai = AIModel()
-    main_ai.model_loader()
-
 
     def on_connect(self):
         print("Client connected",)
         sessioned= session.get()
 
     def on_disconnect(self):
-        print("Client connected", )
+        print("Client disconnected", )
         sessioned = session.get()
 
     def on_message(self,data):
-        emit("server_response",data)
+        print(data)
+        processed_data = main_ai.run("Hello",data)
+        print(processed_data["System_Corpus"])
+        emit("server_response",processed_data["System_Corpus"])
 
     #
     #
