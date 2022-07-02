@@ -46,7 +46,7 @@ class AIModel:
 
         VOCAB_SIZE = self._mGC_tokenizer.vocab_size + 2
         #print(VOCAB_SIZE)
-
+        print("########Loading GC model!!!########")
         new_model = transformer(
             vocab_size=VOCAB_SIZE,
             num_layers=NUM_LAYERS,
@@ -60,6 +60,7 @@ class AIModel:
         return new_model
 
     def _load_NER_model(self):
+        print("########Loading NER model!!!########")
         tag_size = len(AIModel.NER_labels)
 
         new_model = TokenClassification("klue/bert-base", labels=tag_size+1)
@@ -68,7 +69,7 @@ class AIModel:
         return new_model
 
     def _load_Emo_model(self):
-
+        print("########Loading EMO model!!!########")
         new_model = SequenceClassification("klue/bert-base", num_labels=len(AIModel.emotion_labels))
         new_model.load_weights(os.environ['CHATBOT_ROOT']+"/resources/weights/Emo_weights/Emo_weights")
 
@@ -84,8 +85,7 @@ class AIModel:
         # GeneralCorpus_model = load_general_corpus_model(GC_tokenizer)
         # NER_model = load_NER_model(ner_labels)
         # Emo_model = load_Emo_model(index_to_EmotionWord)
-        self.model_loader()
-
+        #self.model_loader()
         Data = OrderedDict()
 
         ##컨버터들 , 컨버터는 정수 to tag등...

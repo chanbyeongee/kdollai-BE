@@ -4,16 +4,13 @@ from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO
 from resources import create_api, create_socketio
 from resources.config.configure import config
-from packages.k_doll_ai_chatbot.transformer_models.aimodel import AIModel
-
 
 from db import db
 
 #SECRET_KEY = config['DEFAULT']['SECRET_KEY']
 #db_name = config['DEFAULT']['DB_NAME']+'.db'
 
-main_ai = AIModel()
-main_ai.model_loader()
+
 
 SECRET_KEY = "chan"
 db_name="chatbot"
@@ -84,4 +81,5 @@ if __name__ == "__main__":
 
     db.init_app(app)
     #app.run(port=3001,debug=True) #debug tells us what is problem
-    sock.run(app,port=3001,debug=True)
+    print("Now we Run...")
+    sock.run(app,port=5000,debug=True,host='0.0.0.0')

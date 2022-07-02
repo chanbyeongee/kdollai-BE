@@ -1,3 +1,8 @@
+from packages.k_doll_ai_chatbot.transformer_models.aimodel import AIModel
+
+main_ai = AIModel()
+main_ai.model_loader()
+
 def create_api(api):
     from .user import UserRegister, User, UserLogin
     from .chat import Chat, ChatList
@@ -12,7 +17,6 @@ def create_api(api):
     api.add_resource(UserLogin, '/login')
 
 def create_socketio(sock):
-
     from .chatnamespace import ChatNamespace
     sock.on_namespace(ChatNamespace('/realchat'))
 

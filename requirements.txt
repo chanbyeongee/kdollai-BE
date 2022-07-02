@@ -11,3 +11,5 @@ transformers
 gdown
 pandas
 scikit-learn
+torch
+gevent-websocket

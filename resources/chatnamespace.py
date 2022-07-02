@@ -1,6 +1,6 @@
 from flask_socketio import Namespace, emit
 from flask import session, request
-from app import main_ai
+from resources import main_ai
 
 class ChatNamespace(Namespace):
 
@@ -14,7 +14,7 @@ class ChatNamespace(Namespace):
 
     def on_message(self,data):
         print(data)
-        processed_data = main_ai.run("Hello",data)
+        processed_data = ChatNamespace.main_ai.run("Hello",data)
         print(processed_data["System_Corpus"])
         emit("server_response",processed_data["System_Corpus"])
 
@@ -65,9 +65,3 @@ class ChatNamespace(Namespace):
     #     empolyee.save_to_db()
     #
     #     return empolyee.json()
-
-class EmployeeList(Resource):
-    @jwt_required
-    def get(self):
-        employees = [employee.json() for employee in EmployeeModel.find_all()]
-        return {'employees': employees}
