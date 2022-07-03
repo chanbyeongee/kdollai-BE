@@ -9,9 +9,9 @@ class UserModel(db.Model):
     username = db.Column(db.String(80))
     usertype = db.Column(db.Integer) #0-parents 1-counseller 2-individual
 
-    employees = db.relationship('EmployeeModel', backref='employees')
+    employees = db.relationship('EmployeeModel', backref='users')
 
-    def __init__(self, secondname, password,username, usertype):
+    def __init__(self, username,secondname,password, usertype):
         self.secondname = secondname
         self.username = username
         self.password = password

@@ -4,7 +4,7 @@ from . import and_
 class StatisticModel(db.Model):
     __tablename__ = 'statistics'
     id = db.Column(db.Integer, primary_key=True)
-    mtype = db.Column(db.Interger) #0-day, 1-week 2-month, 3-year
+    mtype = db.Column(db.Integer) #0-day, 1-week 2-month, 3-year
     date = db.Column(db.String(80)) #day - YYYY-MM-DD ,week - YYYY-MM-DD(start), month - YYYY-MM , year - YYYY
     emotion_bullman = db.Column(db.Integer)
     emotion_normal = db.Column(db.Integer)

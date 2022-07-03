@@ -1,6 +1,7 @@
 from db import db
 from . import and_
 
+
 class EmployeeModel(db.Model):
     __tablename__ = 'employees'
     id = db.Column(db.Integer, primary_key=True)
@@ -10,10 +11,10 @@ class EmployeeModel(db.Model):
     serial_number = db.Column(db.String(80))
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    chats = db.relationship('ChatModel', backref='chats')
-    statistics = db.relationship('StatisticModel',backref='statistics')
+    chats = db.relationship('ChatModel', backref='employees')
+    statistics = db.relationship('StatisticModel', backref='employees')
 
-    def __init__(self,user_id, name,birth,gender,serial_number):
+    def __init__(self,user_id, serial_number, name,birth,gender):
         self.name = name
         self.birth = birth
         self.gender = gender
@@ -32,7 +33,7 @@ class EmployeeModel(db.Model):
 
     @classmethod
     def find_by_name_with_user_id(cls, user_id, name):
-        return cls.query.filter(and_(cls.user_id == user_id, cls.name == name)).first()
+        return cls.query.filter(and_(cls.user_id == user_id, cls.name == name)).all()
 
     @classmethod
     def find_by_serial_with_user_id(cls, user_id, serial_number):

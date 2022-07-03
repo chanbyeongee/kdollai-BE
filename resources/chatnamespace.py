@@ -14,9 +14,10 @@ class ChatNamespace(Namespace):
 
     def on_message(self,data):
         print(data)
-        processed_data = ChatNamespace.main_ai.run("Hello",data)
+
+        processed_data = main_ai.run("Hello",data['message'])
         print(processed_data["System_Corpus"])
-        emit("server_response",processed_data["System_Corpus"])
+        emit("message_response",{"response":processed_data["System_Corpus"]})
 
     #
     #

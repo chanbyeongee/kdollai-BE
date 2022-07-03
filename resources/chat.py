@@ -13,11 +13,17 @@ class Chat(Resource):
                               required=True,
                               help="This field cannot be blank."
                               )
-    parser.add_argument('doll_id',
-                            type=int,
+    parser.add_argument('emotion',
+                            type=str,
                             required=True,
                             help="This field cannot be blank."
                             )
+    parser.add_argument('situation',
+                        type=str,
+                        required=True,
+                        help="This field cannot be blank."
+                        )
+
     def get(self, employee_id, date):
         chat = ChatModel.find_by_date_with_employee_id(employee_id,date)
         if chat:
@@ -28,7 +34,7 @@ class Chat(Resource):
         data = Chat.parser.parse_args()
 
         if ChatModel.find_by_date_with_employee_id(employee_id,date):
-            return {'message': "A chat with date '{}' already exists.".format(data['date'])}, 400
+            return {'message': "A chat with date '{}' already exists.".format(date)}, 400
 
         chat = ChatModel(employee_id, date, **data)
 

@@ -15,13 +15,8 @@ class Employee(Resource):
                               required=True,
                               help="This field cannot be blank."
                               )
-    _user_parser.add_argument('serial_number',
+    _user_parser.add_argument('name',
                               type=str,
-                              required=True,
-                              help="This field cannot be blank."
-                              )
-    _user_parser.add_argument('user_id',
-                              type=int,
                               required=True,
                               help="This field cannot be blank."
                               )
@@ -33,20 +28,20 @@ class Employee(Resource):
                               help="This field cannot be blank."
                               )
 
-    def get(self, user_id,name):
-        employee = EmployeeModel.find_by_name_with_user_id(user_id,name)
+    def get(self, user_id,serialno):
+        employee = EmployeeModel.find_by_serial_with_user_id(user_id,serialno)
         if employee:
             return employee.json(), 200
         return {'message': 'Employee not found'}, 404
 
 
-    def post(self,user_id, name):
+    def post(self,user_id, serialno):
         data = Employee._user_parser.parse_args()
 
-        if EmployeeModel.find_by_serial_with_user_id(user_id,data['serial_number']):
+        if EmployeeModel.find_by_serial_with_user_id(user_id,serialno):
             return {'message': "A employee with serial '{}' already exists.".format(data['serial'])}, 400
 
-        employee = EmployeeModel(user_id, name, **data)
+        employee = EmployeeModel(user_id, serialno, **data)
 
         try:
             employee.save_to_db()
