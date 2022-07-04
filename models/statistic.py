@@ -15,6 +15,8 @@ class StatisticModel(db.Model):
     emotion_sadness = db.Column(db.Integer)
     emotion_guilty = db.Column(db.Integer)
     emotion_empathy = db.Column(db.Integer)
+
+
     situation = db.Column(db.String(80))
 
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'))

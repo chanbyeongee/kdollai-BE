@@ -1,6 +1,9 @@
 from flask_socketio import Namespace, emit
 from flask import session, request
 from resources import main_ai
+from models.employee import EmployeeModel
+from models.chat import ChatModel
+from datetime import datetime
 
 class ChatNamespace(Namespace):
 
@@ -12,11 +15,26 @@ class ChatNamespace(Namespace):
         print("Client disconnected", )
         #sessioned = session.get()
 
+    def on_set_employee_id(self,data):
+        self.employee_id = EmployeeModel.find_by_serial(data['serial_number']).id
+
     def on_message(self,data):
         print(data)
+        now = datetime.now()
+        real_date = str(now.year) + str(now.month) + str(now.day) + str(now.hour) + str(now.minute) + str(now.second)
+
 
         processed_data = main_ai.run("Hello",data['message'])
         print(processed_data["System_Corpus"])
+        my_chat = ChatModel(self.employee_id, real_date, 1, data['message'],processed_data['Emotion'],processed_data['Type'])
+        my_chat.save_to_db()
+
+        now = datetime.now()
+        real_date = str(now.year) + str(now.month) + str(now.day) + str(now.hour) + str(now.minute) + str(now.second)
+
+        my_chat = ChatModel(self.employee_id, real_date, 0, processed_data["System_Corpus"], 'none',
+                            'none')
+        my_chat.save_to_db()
         emit("message_response",{"response":processed_data["System_Corpus"]})
 
     #

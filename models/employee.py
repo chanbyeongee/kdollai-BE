@@ -12,6 +12,7 @@ class EmployeeModel(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     chats = db.relationship('ChatModel', backref='employees')
+
     statistics = db.relationship('StatisticModel', backref='employees')
 
     def __init__(self,user_id, serial_number, name,birth,gender):

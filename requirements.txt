@@ -10,4 +10,5 @@ tensorflow_datasets
 transformers
 gdown
 https://download.pytorch.org/whl/cpu/torch-1.4.0%2Bcpu-cp38-cp38-linux_x86_64.whl
+https://download.pypi.org/simple/grpcio-tools/grpcio_tools-1.47.0-cp310-cp310-linux_armv7l.whl
 gevent-websocket
