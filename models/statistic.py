@@ -1,48 +1,33 @@
 from db import db
 from . import and_
+import json
+
+init_emotion={
+    "불만":0, "중립":0, "당혹":0, "기쁨":0, "걱정":0, "질투":0, "슬픔":0, "죄책감":0, "연민":0
+}
 
 class StatisticModel(db.Model):
     __tablename__ = 'statistics'
     id = db.Column(db.Integer, primary_key=True)
-    mtype = db.Column(db.Integer) #0-day, 1-week 2-month, 3-year
-    date = db.Column(db.String(80)) #day - YYYY-MM-DD ,week - YYYY-MM-DD(start), month - YYYY-MM , year - YYYY
-    emotion_bullman = db.Column(db.Integer)
-    emotion_normal = db.Column(db.Integer)
-    emotion_embarrassed = db.Column(db.Integer)
-    emotion_delight = db.Column(db.Integer)
-    emotion_worry = db.Column(db.Integer)
-    emotion_envy = db.Column(db.Integer)
-    emotion_sadness = db.Column(db.Integer)
-    emotion_guilty = db.Column(db.Integer)
-    emotion_empathy = db.Column(db.Integer)
-
-
+    date_Y = db.Column(db.String(80))
+    date_YM = db.Column(db.String(80))
+    date_day = db.Column(db.String(80))
+    emotions = db.Column(db.String(80))
     situation = db.Column(db.String(80))
+    child_id = db.Column(db.Integer, db.ForeignKey('childs.id'))
 
-    employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'))
-
-    def __init__(self, mtype,date,emo_list,situation,employee_id):
+    def __init__(self, mtype,date_Y,date_YM,date_day,situation,child_id):
         self.mtype = mtype
-        self.date = date
-        self.emotion_bullman = emo_list[0]
-        self.emotion_normal = emo_list[1]
-        self.emotion_embarrassed = emo_list[2]
-        self.emotion_delight = emo_list[3]
-        self.emotion_worry = emo_list[4]
-        self.emotion_envy = emo_list[5]
-        self.emotion_sadness = emo_list[6]
-        self.emotion_guilty = emo_list[7]
-        self.emotion_empathy = emo_list[8]
+        self.date_Y = date_Y
+        self.date_YM = date_YM
+        self.date_day = date_day
+        self.emotions = json.dumps(init_emotion)
         self.situation = situation
-        self.employee_id = employee_id
+        self.child_id = child_id
 
     def json(self):
-        return {'type': self.type, 'date': self.date,
-                'emotion': {'bullman': self.emotion_bullman,'normal': self.emotion_normal,
-                            'embarrassed': self.emotion_embarrassed,'delight': self.emotion_delight,
-                            'worry': self.emotion_worry,'envy': self.envy,
-                            'sadness': self.emotion_sadness,'guilty': self.emotion_guilty,
-                            'empathy': self.emotion_empathy},
+        return {'date': self.date,
+                'emotions': json.loads(self.emotions),
                 'situation': self.situation}
 
     @classmethod
@@ -50,12 +35,17 @@ class StatisticModel(db.Model):
         return cls.query.filter_by(id=id).first()
 
     @classmethod
-    def find_by_employee_id(cls, employee_id):
-        return cls.query.filter_by(employee_id=employee_id).all()
+    def find_by_child_id(cls, child_id):
+        return cls.query.filter_by(child_id=child_id).all()
 
     @classmethod
-    def find_by_employee_id_and_type(cls, mtype, employee_id):
-        return cls.query.filter(and_(cls.mtype == mtype, cls.employee_id == employee_id)).all()
+    def find_by_child_id_and_year(cls, child_id,year):
+        return cls.query.filter(and_(cls.child_id == child_id,cls.date_Y == year)).all()
+
+    @classmethod
+    def find_by_child_id_and_ym(cls, child_id, YM):
+        return cls.query.filter(and_(cls.child_id == child_id, cls.date_YM == year)).all()
+
 
     def save_to_db(self):
         db.session.add(self)

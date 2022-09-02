@@ -1,25 +1,26 @@
 from db import db
+from .child import ChildModel
 
 class UserModel(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    secondname = db.Column(db.String(80))
+    user_subname = db.Column(db.String(80))
     password = db.Column(db.String(80))
-    username = db.Column(db.String(80))
-    usertype = db.Column(db.Integer) #0-parents 1-counseller 2-individual
+    user_name = db.Column(db.String(80))
+    user_type = db.Column(db.String(80)) #0-parents 1-counseller 2-individual
 
-    employees = db.relationship('EmployeeModel', backref='users')
+    childs = db.relationship('ChildModel', backref='users')
 
-    def __init__(self, username,secondname,password, usertype):
-        self.secondname = secondname
-        self.username = username
+    def __init__(self, user_name,user_subname,password, user_type):
+        self.user_subname = user_subname
+        self.user_name = user_name
         self.password = password
-        self.usertype = usertype
+        self.user_type = user_type
 
     def json(self):
-        return {'id':self.id, 'secondname':self.secondname, 'user_name':self.username,'user_type':self.usertype,
-                'employees': [employee.json() for employee in self.employees]}
+        return {'info':{'id':self.id, 'user_subname':self.user_subname, 'user_name':self.user_name,'user_type':self.user_type},
+                'childs': [child.json() for child in self.childs]}
 
     def save_to_db(self):
         db.session.add(self)
@@ -29,9 +30,13 @@ class UserModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def save_child_data(self,child_name,child_age,child_gender,serial_number):
+        child = ChildModel(self.id,child_name,child_age,child_gender,serial_number)
+        child.save_to_db()
+
     @classmethod
-    def find_by_username(cls, username):
-        return cls.query.filter_by(username=username).first()
+    def find_by_username(cls, user_name):
+        return cls.query.filter_by(user_name=user_name).first()
 
     @classmethod
     def find_by_id(cls, _id):

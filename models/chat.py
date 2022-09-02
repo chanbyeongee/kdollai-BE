@@ -5,32 +5,42 @@ class ChatModel(db.Model):
     __tablename__ = 'chats'
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(80))
-    direction = db.Column(db.Integer)#0-sender(counseller) #1-receive(children)
-    line = db.Column(db.String(80))
+    date_YMD = db.Column(db.String(80))
+    date_YMDHMS = db.Column(db.String(80))
+    date_time = db.Column(db.String(80))
+    direction = db.Column(db.String(80))#0-user #1-chatbot
+    utterance = db.Column(db.String(80))
     emotion = db.Column(db.String(80))
     situation = db.Column(db.String(80))
 
-    employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'))
+    child_id = db.Column(db.Integer, db.ForeignKey('childs.id'))
 
-    def __init__(self, employee_id, date, direction, line, emotion, situation):
-        self.date = date
+    def __init__(self, child_id, date_YMD, date_YMDHMS,date_time, direction, utterance, emotion, situation):
+        self.date_YMD = date_YMD
+        self.date_YMDHMS = date_YMDHMS
+        self.date_time = date_time
         self.direction = direction
-        self.line = line
+        self.utterance = utterance
         self.emotion = emotion
         self.situation =situation
-        self.employee_id = employee_id
+
+        self.child_id = child_id
 
     def json(self):
-        return {'date': self.date, 'direction': self.direction,'line':self.line, 'emotion':self.emotion, 'situation': self.situation}
+        return {'time': self.date_time, 'direction': self.direction,'utterance':self.utterance}
 
     @classmethod
-    def find_by_date_with_employee_id(cls, employee_id, date):
-        return cls.query.filter(and_(cls.employee_id == employee_id, cls.date == date)).first()
+    def find_all_by_day_with_child_id(cls, child_id, day):
+        return cls.query.filter(and_(cls.child_id == child_id, cls.date_YMD == day)).all()
 
     @classmethod
-    def find_all_with_employee_id(cls,employee_id):
-        return cls.query.filter_by(employee_id=employee_id).all()
+    def find_by_date_with_child_id(cls, child_id, date):
+        return cls.query.filter(and_(cls.child_id == child_id, cls.date_YMDHMS == date)).first()
+
+
+    @classmethod
+    def find_all_with_child_id(cls,child_id):
+        return cls.query.filter_by(child_id=child_id).all()
 
     def save_to_db(self):
         db.session.add(self)

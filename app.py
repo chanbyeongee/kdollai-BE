@@ -67,7 +67,7 @@ jwt = JWTManager(app) #this will make endpoint named '/auth' (username,password)
 #         'error': 'token_revoked'
 #     }), 401
 create_api(api)
-create_socketio(sock)
+#create_socketio(sock)
 
 @app.before_first_request
 def create_tables():

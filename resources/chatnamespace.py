@@ -1,7 +1,7 @@
 from flask_socketio import Namespace, emit
 from flask import session, request
 from resources import main_ai
-from models.employee import EmployeeModel
+from models.child import ChildModel
 from models.chat import ChatModel
 from datetime import datetime
 
