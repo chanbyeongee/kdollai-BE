@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO
+from flask_cors import CORS
 from resources import create_api, create_socketio
 from resources.config.configure import config
 
@@ -67,14 +68,13 @@ jwt = JWTManager(app) #this will make endpoint named '/auth' (username,password)
 #         'error': 'token_revoked'
 #     }), 401
 create_api(api)
+CORS(app, resources={r'*': {'origins': '*'}})
+
 #create_socketio(sock)
 
 @app.before_first_request
 def create_tables():
     db.create_all()
-
-
-
 
 
 if __name__ == "__main__":

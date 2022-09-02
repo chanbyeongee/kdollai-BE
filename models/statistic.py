@@ -9,18 +9,14 @@ init_emotion={
 class StatisticModel(db.Model):
     __tablename__ = 'statistics'
     id = db.Column(db.Integer, primary_key=True)
-    date_Y = db.Column(db.String(80))
-    date_YM = db.Column(db.String(80))
-    date_day = db.Column(db.String(80))
+    date_YMD = db.Column(db.String(80))
     emotions = db.Column(db.String(80))
     situation = db.Column(db.String(80))
     child_id = db.Column(db.Integer, db.ForeignKey('childs.id'))
 
-    def __init__(self, mtype,date_Y,date_YM,date_day,situation,child_id):
+    def __init__(self, mtype,date_YMD,situation,child_id):
         self.mtype = mtype
-        self.date_Y = date_Y
-        self.date_YM = date_YM
-        self.date_day = date_day
+        self.date_YMD = date_YMD
         self.emotions = json.dumps(init_emotion)
         self.situation = situation
         self.child_id = child_id
@@ -39,7 +35,7 @@ class StatisticModel(db.Model):
         return cls.query.filter_by(child_id=child_id).all()
 
     @classmethod
-    def find_by_child_id_and_year(cls, child_id,year):
+    def find_by_child_id_and_date(cls, child_id,date):
         return cls.query.filter(and_(cls.child_id == child_id,cls.date_Y == year)).all()
 
     @classmethod
