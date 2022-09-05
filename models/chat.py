@@ -7,7 +7,6 @@ class ChatModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_YMD = db.Column(db.String(80))
     date_YMDHMS = db.Column(db.String(80))
-    date_time = db.Column(db.String(80))
     direction = db.Column(db.String(80))#0-user #1-chatbot
     utterance = db.Column(db.String(80))
     emotion = db.Column(db.String(80))
@@ -15,10 +14,9 @@ class ChatModel(db.Model):
 
     child_id = db.Column(db.Integer, db.ForeignKey('childs.id'))
 
-    def __init__(self, child_id, date_YMD, date_YMDHMS,date_time, direction, utterance, emotion, situation):
+    def __init__(self, child_id, date_YMD, date_YMDHMS, direction, utterance, emotion, situation):
         self.date_YMD = date_YMD
         self.date_YMDHMS = date_YMDHMS
-        self.date_time = date_time
         self.direction = direction
         self.utterance = utterance
         self.emotion = emotion

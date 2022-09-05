@@ -53,7 +53,7 @@ class Chat(Resource):
 
         date_YMD = date[:8]
 
-        chat = ChatModel(child_id, date_YMD,date,date[8:], data['direction'],data['utterance'],data['emotion'],data['situation'])
+        chat = ChatModel(child_id, date_YMD,date, data['direction'],data['utterance'],data['emotion'],data['situation'])
 
         try:
             chat.save_to_db()

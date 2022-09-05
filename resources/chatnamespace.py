@@ -4,6 +4,7 @@ from resources import main_ai
 from models.child import ChildModel
 from models.chat import ChatModel
 from datetime import datetime
+from pytz import timezone
 
 class ChatNamespace(Namespace):
 
@@ -16,71 +17,25 @@ class ChatNamespace(Namespace):
         #sessioned = session.get()
 
     def on_set_employee_id(self,data):
-        self.employee_id = EmployeeModel.find_by_serial(data['serial_number']).id
+        self.child_id = ChildModel.find_by_serial(data['serial_number']).id
 
-    def on_message(self,data):
+    def on_SEND_MESSAGE(self,data):
         print(data)
-        now = datetime.now()
-        real_date = str(now.year) + str(now.month) + str(now.day) + str(now.hour) + str(now.minute) + str(now.second)
+        now = datetime.now(timezone('Asia/Seoul')).strftime("%Y%m%d%H%M%S")
+        print("DAY: ", now[:8])
+        print("TIME: ", now[8:])
 
 
-        processed_data = main_ai.run("Hello",data['message'])
-        print(processed_data["System_Corpus"])
-        my_chat = ChatModel(self.employee_id, real_date, 1, data['message'],processed_data['Emotion'],processed_data['Type'])
+        processed_data = main_ai.run("Hello", data['message'])
+
+        my_chat = ChatModel(self.child_id, now[:8], now,"USER", data['message'], processed_data['Emotion'],
+                            processed_data['Type'])
         my_chat.save_to_db()
 
-        now = datetime.now()
-        real_date = str(now.year) + str(now.month) + str(now.day) + str(now.hour) + str(now.minute) + str(now.second)
-
-        my_chat = ChatModel(self.employee_id, real_date, 0, processed_data["System_Corpus"], 'none',
+        now = datetime.now(timezone('Asia/Seoul')).strftime("%Y%m%d%H%M%S")
+        my_chat = ChatModel(self.child_id, now[:8], now,"BOT", processed_data["System_Corpus"], 'none',
                             'none')
         my_chat.save_to_db()
-        emit("message_response",{"response":processed_data["System_Corpus"]})
 
-    #
-    #
-    # def get(self, name):
-    #     employee = EmployeeModel.find_by_name(name)
-    #     if employee:
-    #         return employee.json()
-    #     return {'message': 'Employee not found'}, 404
-    #
-    #
-    # def post(self, name):
-    #     data = Employee._user_parser.parse_args()
-    #
-    #     if EmployeeModel.find_by_serial(data['serial_number']):
-    #         return {'message': "A employee with serial '{}' already exists.".format(data['serial'])}, 400
-    #
-    #     employee = EmployeeModel(name, **data)
-    #
-    #     try:
-    #         employee.save_to_db()
-    #     except:
-    #         return {"message": "An error occurred creating the store."}, 500
-    #
-    #     return employee.json(), 201
-    #
-    #
-    # def delete(self, name):
-    #     employee = EmployeeModel.find_by_name(name)
-    #     if employee:
-    #         employee.delete_from_db()
-    #
-    #     return {'message': 'Store deleted'}
-    #
-    # def put(self, name):
-    #     data = Employee.parser.parse_args()
-    #     empolyee = EmployeeModel.find_by_name(name)
-    #
-    #     if empolyee:
-    #         empolyee.name = data['name']
-    #         empolyee.birth = data['birth']
-    #         empolyee.gender = data['gender']
-    #         empolyee.serial_number = data['serial_number']
-    #     else:
-    #         empolyee = EmployeeModel(name, **data)
-    #
-    #     empolyee.save_to_db()
-    #
-    #     return empolyee.json()
+        emit("RECEIVE_MESSAGE", {"response": processed_data["System_Corpus"], "day": now[:8], 'time': now[8:]})
+
