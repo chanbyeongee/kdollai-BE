@@ -11,7 +11,8 @@ from db import db
 #SECRET_KEY = config['DEFAULT']['SECRET_KEY']
 #db_name = config['DEFAULT']['DB_NAME']+'.db'
 
-
+host = "192.168.0.74"
+port = 5000
 
 SECRET_KEY = "chan"
 db_name="chatbot"
@@ -28,7 +29,7 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 app.secret_key = "chan"
 api = Api(app) #API FLASK SERVER
 
-sock = SocketIO(app)
+sock = SocketIO(app,cors_allowed_origins="*")
 
 #this will be used for login(authenticate users)
 jwt = JWTManager(app) #this will make endpoint named '/auth' (username,password)
@@ -68,9 +69,7 @@ jwt = JWTManager(app) #this will make endpoint named '/auth' (username,password)
 #         'error': 'token_revoked'
 #     }), 401
 create_api(api)
-CORS(app, resources={r'*': {'origins': '*'}})
-
-#create_socketio(sock)
+create_socketio(sock)
 
 @app.before_first_request
 def create_tables():
@@ -82,4 +81,4 @@ if __name__ == "__main__":
     db.init_app(app)
     #app.run(port=3001,debug=True) #debug tells us what is problem
     print("Now we Run...")
-    sock.run(app,port=5000,debug=False)
+    sock.run(app,host=host,port=port,debug=False)
