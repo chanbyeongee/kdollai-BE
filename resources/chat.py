@@ -32,6 +32,6 @@ class YMDChatList(Resource):
 class AllChatList(Resource):
     def get(self):
         child_id = 1
-        chats = [chat.json() for chat in ChatModel.find_all_by_user_id(child_id)]
+        chats = [chat.json() for chat in ChatModel.find_all_with_child_id(child_id)]
 
         return {'chats': chats},200

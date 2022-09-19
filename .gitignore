@@ -1,6 +1,12 @@
 /packages/pue_ai/resources/weights/Emo_weights/
 
-/packages/pue_ai/resources/weights/GD_weights/
+/packages/pue_ai/resources/weights/GeneralDialog_weights/
+
+/packages/pue_ai/resources/weights/Subtopic_model/
+
+/packages/pue_ai/resources/weights/Transformer_weights/
+
+/packages/pue_ai/resources/weights/Topic_weights/
 
 /packages/pue_ai/resources/weights/NER_weights/
 

@@ -11,7 +11,7 @@ from db import db
 #SECRET_KEY = config['DEFAULT']['SECRET_KEY']
 #db_name = config['DEFAULT']['DB_NAME']+'.db'
 
-host = "192.168.0.74"
+host = "127.0.0.1"
 port = 5000
 
 SECRET_KEY = "chan"
@@ -22,6 +22,7 @@ db_name="chatbot"
 #3. Flask-JWT
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+db_name
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

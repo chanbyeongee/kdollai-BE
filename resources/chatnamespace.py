@@ -17,6 +17,7 @@ class ChatNamespace(Namespace):
         #sessioned = session.get()
 
     def on_SET_CHILD_ID(self,data):
+        print(data)
         self.child_id = ChildModel.find_by_serial(data['serial_number']).id
 
     def on_SEND_MESSAGE(self,data):

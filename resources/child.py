@@ -26,19 +26,16 @@ class Child(Resource):
                               help="This field cannot be blank."
                               )
 
-    @jwt_required()
     def get(self):
-        user_id = get_jwt_identity()
-
+        user_id = 1
         child = ChildModel.find_by_user_id(user_id)
         if child:
             return {'child' : child.json()}, 200
 
         return {'message': 'Child not found'}, 404
 
-    @jwt_required()
     def post(self):
-        user_id = get_jwt_identity()
+        user_id = 1
 
         data = Child._user_parser.parse_args()
 
@@ -54,9 +51,8 @@ class Child(Resource):
 
         return child.json(), 201
 
-    @jwt_required()
     def delete(self):
-        user_id = get_jwt_identity()
+        user_id = 1
 
         child = ChildModel.find_by_user_id(user_id)
         if child:
@@ -64,9 +60,8 @@ class Child(Resource):
 
         return {'message': 'Child deleted'}, 200
 
-    @jwt_required()
     def put(self):
-        user_id = get_jwt_identity()
+        user_id = 1
 
         data = Child._user_parser.parse_args()
         child = ChildModel.find_by_user_id(user_id)
@@ -84,8 +79,7 @@ class Child(Resource):
         return child.json(), 201
 
 class ChildList(Resource):
-    @jwt_required()
     def get(self):
-        user_id = get_jwt_identity()
+        user_id = 1
         childs = [child.json() for child in ChildModel.find_all_with_user_id(user_id)]
         return {'childs': childs}

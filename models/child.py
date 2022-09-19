@@ -6,7 +6,7 @@ class ChildModel(db.Model):
     __tablename__ = 'childs'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
-    age = db.Column(db.String(80))
+    age = db.Column(db.Integer())
     gender = db.Column(db.String(80)) #0-male 1-female
     serial_number = db.Column(db.String(80))
 

@@ -4,6 +4,7 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/packages/k-doll-ai-chatbot" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/packages/k_doll_ai_chatbot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/packages/pue_AI" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/site-packages/k-doll-ai-chatbot" vcs="Git" />
   </component>
 </project>

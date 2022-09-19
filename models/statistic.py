@@ -20,6 +20,7 @@ class StatisticModel(db.Model):
         self.date_YMD = date_YMD
         self.emotions = json.dumps(init_emotion)
         self.situation = ""
+        self.total=0
 
         self.child_id = child_id
 
