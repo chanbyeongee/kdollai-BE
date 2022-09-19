@@ -9,86 +9,29 @@ from flask_jwt_extended import (
     jwt_required
 )
 
-class Chat(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument('direction',
-                              type=str,
-                              required=True,
-                              help="This field cannot be blank."
-                              )
-    parser.add_argument('utterance',
-                              type=str,
-                              required=True,
-                              help="This field cannot be blank."
-                              )
-    parser.add_argument('emotion',
-                            type=str,
-                            required=True,
-                            help="This field cannot be blank."
-                            )
-    parser.add_argument('situation',
-                        type=str,
-                        required=True,
-                        help="This field cannot be blank."
-                        )
+class NumberChatList(Resource):
+    def get(self,date, number):
+        child_id = 1
+        chats = [chat.json() for chat in ChatModel.find_by_number_with_child_id(child_id,date,number)]
+        return {'chats': chats}, 200
 
-    @jwt_required()
-    def get(self, date):
-        user_id = get_jwt_identity()
+class RangeChatList(Resource):
+    def get(self,end,begin):
+        child_id = 1
+        chats = [chat.json() for chat in ChatModel.find_range_with_child_id(child_id, begin,end)]
 
-        child_id = ChildModel.find_by_user_id(user_id).id
+        return {'chats': chats}, 200
 
-        chat = ChatModel.find_by_date_with_child_id(child_id,date)
-        if chat:
-            return chat.json(), 200
-        return {'message': 'Chat not found'}, 404
-
-    @jwt_required()
-    def post(self, date):
-
-        user_id = get_jwt_identity()
-        child_id = ChildModel.find_by_user_id(user_id).id
-
-        data = Chat.parser.parse_args()
-
-        date_YMD = date[:8]
-
-        chat = ChatModel(child_id, date_YMD,date, data['direction'],data['utterance'],data['emotion'],data['situation'])
-
-        try:
-            chat.save_to_db()
-        except Exception as e:
-            return {"message": "An error occurred creating the chat."}, 500
-
-        return chat.json(), 201
-
-    @jwt_required()
-    def delete(self, date):
-        user_id = get_jwt_identity()
-        child_id = ChildModel.find_by_user_id(user_id).id
-
-        chat = ChatModel.find_by_date_with_child_id(child_id ,date)
-        if chat:
-            chat.delete_from_db()
-
-        return {'message': 'Chat deleted'}, 200
-
-class ChatList(Resource):
-    @jwt_required()
-    def get(self):
-        user_id = get_jwt_identity()
-
-        child_id = ChildModel.find_by_user_id(user_id).id
-
-        chats = [chat.json() for chat in ChatModel.find_all_with_child_id(child_id)]
-        return {'chats': chats}
-
-class ChatDay(Resource):
-    @jwt_required()
+class YMDChatList(Resource):
     def get(self,day):
-        user_id = get_jwt_identity()
+        child_id = 1
+        chats = [chat.json() for chat in ChatModel.find_all_by_dateYMD_with_child_id(child_id,day)]
 
-        child_id = ChildModel.find_by_user_id(user_id).id
+        return {'chats': chats},200
 
-        chats = [chat.json() for chat in ChatModel.find_all_by_day_with_child_id(child_id,day)]
-        return {'chats': chats}
+class AllChatList(Resource):
+    def get(self):
+        child_id = 1
+        chats = [chat.json() for chat in ChatModel.find_all_by_user_id(child_id)]
+
+        return {'chats': chats},200

@@ -12,19 +12,25 @@ class StatisticModel(db.Model):
     date_YMD = db.Column(db.String(80))
     emotions = db.Column(db.String(80))
     situation = db.Column(db.String(80))
+    total = db.Column(db.Integer())
+
     child_id = db.Column(db.Integer, db.ForeignKey('childs.id'))
 
-    def __init__(self, mtype,date_YMD,situation,child_id):
-        self.mtype = mtype
+    def __init__(self, date_YMD,child_id):
         self.date_YMD = date_YMD
         self.emotions = json.dumps(init_emotion)
-        self.situation = situation
+        self.situation = ""
+
         self.child_id = child_id
 
     def json(self):
-        return {'date': self.date,
-                'emotions': json.loads(self.emotions),
-                'situation': self.situation}
+        return {'date': self.date_YMD,
+                "chart":{
+
+                    'emotions': json.loads(self.emotions),
+                    'situation': self.situation
+                    }
+                }
 
     @classmethod
     def find_by_id(cls, id):
@@ -35,13 +41,17 @@ class StatisticModel(db.Model):
         return cls.query.filter_by(child_id=child_id).all()
 
     @classmethod
-    def find_by_child_id_and_date(cls, child_id,date):
-        return cls.query.filter(and_(cls.child_id == child_id,cls.date_Y == year)).all()
+    def find_by_dateYMD_with_child_id(cls, child_id, date):
+        return cls.query.filter(and_(cls.child_id == child_id, cls.date_YMD == date)).first()
 
     @classmethod
-    def find_by_child_id_and_ym(cls, child_id, YM):
-        return cls.query.filter(and_(cls.child_id == child_id, cls.date_YM == year)).all()
+    def find_range_with_child_id(cls, child_id, begin, latest):
+        return cls.query.filter(and_(cls.date_YMD.between(begin, latest), cls.child_id == child_id)).all()
 
+    @classmethod
+    def find_by_number_with_child_id(cls, child_id, latest, number):
+        return cls.query.filter(and_(cls.date_YMD < latest, cls.child_id == child_id)).order_by(cls.id.desc()).limit(
+            number).all()
 
     def save_to_db(self):
         db.session.add(self)

@@ -48,17 +48,17 @@ class User(Resource):
     This resource can be useful when testing our Flask app. We may not want to expose it to public users, but for the
     sake of demonstration in this course, it can be useful when we are manipulating data regarding the users.
     """
-    @jwt_required()
     def get(self):
-        user_id = get_jwt_identity()
+        user_id = 1
+
         user = UserModel.find_by_id(user_id)
         if not user:
             return {'message': 'User Not Found'}, 404
         return user.json(), 200
 
-    @jwt_required()
     def delete(self):
-        user_id = get_jwt_identity()
+        user_id = 1
+
         user = UserModel.find_by_user_id(user_id)
         if not user:
             return {'message': 'User Not Found'}, 404

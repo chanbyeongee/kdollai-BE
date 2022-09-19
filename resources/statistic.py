@@ -1,55 +1,116 @@
 from flask_restful import Resource, reqparse
 from models.chat import ChatModel
 from models.child import ChildModel
-from models.statistic import StatisticModel
+from models.statistic import StatisticModel, init_emotion
 from datetime import datetime,timedelta
+import json
 
-from flask_jwt_extended import (
-    create_access_token,
-    create_refresh_token,
-    get_jwt_identity,
-    jwt_required
-)
+class NumberStatList(Resource):
+    def get(self,date, number):
 
-class RangeStatistic(Resource):
-    parser = reqparse.RequestParser()
+        child_id = 1
+        total_cnt=0
 
-    @jwt_required()
-    def get(self, sday,eday):
-        user_id = get_jwt_identity()
+        end = datetime.strptime(date, '%Y%m%d')
+        begin = (end - timedelta(number-1)).strftime("%Y%m%d")
 
-        child_id = ChildModel.find_by_user_id(user_id).id
+        ret_emotions = init_emotion.copy()
+        stats = StatisticModel.find_range_with_child_id(child_id, begin, date)
 
+        if not stats :
+            return {
+                'isSummary':False,
+                "statistics" : []
+               }
 
-        start = datetime.strptime(sday, "%Y%m%d")
-        end = datetime.strptime(eday, "%Y%m%d")
-        dates = [(start + timedelta(days=i)).strftime("%Y%m%d") for i in range((end - start).days + 1)]
-
-        rets = [StatisticModel.find_by_child_id_and_day(child_id,day) for day in dates]
-
-
-        #DO SOMETHING!
+        for stat in stats:
+            temp = json.loads(stat.emotions)
+            total_cnt += stat.total
+            for key in ret_emotions.keys():
+                ret_emotions[key] += temp[key]
 
 
-        if rets:
-            return {ret.json() for ret in rets}, 200
-        return {'message': 'Chat not found'}, 404
+        return {
+                'isSummary':True,
+                   'summary':{
+                        "total":total_cnt,
+                        'emotions': ret_emotions
+                    },
+                    "statistics" : [stat.json() for stat in stats]
+               }, 200
 
-class ListStatistic(Resource):
-    parser = reqparse.RequestParser()
 
-    @jwt_required()
-    def get(self, sday,eday):
-        user_id = get_jwt_identity()
+class RangeStatList(Resource):
+    def get(self,end,begin):
+        child_id = 1
+        total_cnt = 0
 
-        child_id = ChildModel.find_by_user_id(user_id).id
+        ret_emotions = init_emotion.copy()
+        stats = StatisticModel.find_range_with_child_id(child_id, begin, end)
 
-        start = datetime.strptime(sday, "%Y%m%d")
-        end = datetime.strptime(eday, "%Y%m%d")
-        dates = [(start + timedelta(days=i)).strftime("%Y%m%d") for i in range((end - start).days + 1)]
+        if not stats :
+            return {
+                'isSummary': False,
+                "statistics": []
+            }
 
-        rets = [StatisticModel.find_by_child_id_and_day(child_id, day) for day in dates]
+        for stat in stats:
+            temp = json.loads(stat.emotions)
+            total_cnt += stat.total
+            for key in ret_emotions.keys():
+                ret_emotions[key] += temp[key]
 
-        if rets:
-            return {ret.json() for ret in rets}, 200
-        return {'message': 'Chat not found'}, 404
+        return {
+                   'isSummary': True,
+                   'summary': {
+                       "total": total_cnt,
+                       'emotions': ret_emotions
+                   },
+                   "statistics": [stat.json() for stat in stats]
+               }, 200
+
+class YMDStatList(Resource):
+    def get(self,day):
+        child_id = 1
+
+        stat = StatisticModel.find_by_dateYMD_with_child_id(child_id,day)
+
+        if not stat :
+            return {
+                'isSummary': False,
+                "statistics": []
+            }
+
+        return {
+                   'isSummary': False,
+                   "statistics" : [stat.json()]
+               }, 200
+
+class AllStatList(Resource):
+    def get(self):
+        child_id = 1
+
+        total_cnt = 0
+        ret_emotions = init_emotion.copy()
+        stats = StatisticModel.find_by_child_id(child_id)
+
+        if not stats :
+            return {
+                'isSummary': False,
+                "statistics": []
+            }
+
+        for stat in stats:
+            temp = json.loads(stat.emotions)
+            total_cnt += stat.total
+            for key in ret_emotions.keys():
+                ret_emotions[key] += temp[key]
+
+        return {
+                   'isSummary': True,
+                   'summary': {
+                       "total": total_cnt,
+                       'emotions': ret_emotions
+                   },
+                   "statistics": [stat.json() for stat in stats]
+               }, 200

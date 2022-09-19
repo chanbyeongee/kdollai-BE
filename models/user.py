@@ -1,5 +1,6 @@
 from db import db
 from .child import ChildModel
+import json
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -10,13 +11,24 @@ class UserModel(db.Model):
     user_name = db.Column(db.String(80))
     user_type = db.Column(db.String(80)) #0-parents 1-counseller 2-individual
 
+    provider = db.Column(db.String(80))
+    pid = db.Column(db.String(80))
+    cursor = db.Column(db.String(80))
+    value_container = db.Column(db.String(80))
+    res_controller = db.Column(db.String(80))
+
     childs = db.relationship('ChildModel', backref='users')
 
-    def __init__(self, user_name,user_subname,password, user_type):
+    def __init__(self, user_name,user_subname="",password="", user_type="",provider="",pid=""):
         self.user_subname = user_subname
         self.user_name = user_name
         self.password = password
         self.user_type = user_type
+        self.provider = provider
+        self.pid = pid
+        self.value_container = json.dumps({"name": user_subname})
+        self.res_controller = None
+        self.cursor = None
 
     def json(self):
         return {'info':{'id':self.id, 'user_subname':self.user_subname, 'user_name':self.user_name,'user_type':self.user_type},

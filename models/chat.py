@@ -14,27 +14,34 @@ class ChatModel(db.Model):
 
     child_id = db.Column(db.Integer, db.ForeignKey('childs.id'))
 
-    def __init__(self, child_id, date_YMD, date_YMDHMS, direction, utterance, emotion, situation):
+    def __init__(self, child_id, date_YMD, date_YMDHMS, direction, utterance):
         self.date_YMD = date_YMD
         self.date_YMDHMS = date_YMDHMS
         self.direction = direction
         self.utterance = utterance
-        self.emotion = emotion
-        self.situation =situation
 
         self.child_id = child_id
 
     def json(self):
-        return {'time': self.date_time, 'direction': self.direction,'utterance':self.utterance}
+        return {'day': self.date_YMD,'time': self.date_YMDHMS[8:], 'direction': self.direction,'utterance':self.utterance}
 
     @classmethod
-    def find_all_by_day_with_child_id(cls, child_id, day):
+    def find_all_by_dateYMD_with_child_id(cls, child_id, day):
         return cls.query.filter(and_(cls.child_id == child_id, cls.date_YMD == day)).all()
 
     @classmethod
-    def find_by_date_with_child_id(cls, child_id, date):
+    def find_by_fulldate_with_child_id(cls, child_id, date):
         return cls.query.filter(and_(cls.child_id == child_id, cls.date_YMDHMS == date)).first()
 
+    @classmethod
+    def find_range_with_child_id(cls, child_id, begin, latest):
+        return cls.query.filter(and_(cls.date_YMD.between(begin, latest), cls.child_id == child_id)).order_by(
+            cls.id.desc()).all()
+
+    @classmethod
+    def find_by_number_with_child_id(cls, child_id, latest, number):
+        return cls.query.filter(and_(cls.date_YMDHMS < latest, cls.child_id == child_id)).order_by(cls.id.desc()).limit(
+            number).all()
 
     @classmethod
     def find_all_with_child_id(cls,child_id):
