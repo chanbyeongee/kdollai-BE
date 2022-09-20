@@ -51,5 +51,5 @@ class ChatNamespace(Namespace):
         my_chat = ChatModel(self.child_id, day,full_date, real_time,"BOT", processed_data["System_Corpus"])
         my_chat.save_to_db()
 
-        emit("RECEIVE_MESSAGE", {"response": processed_data["System_Corpus"], "day": day, 'time': {real_time}})
+        emit("RECEIVE_MESSAGE", {"response": processed_data["System_Corpus"], "day": day, 'time': real_time})
 
