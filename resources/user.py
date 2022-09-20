@@ -7,7 +7,7 @@ from flask_jwt_extended import (
     jwt_required
 )
 from models import UserModel
-
+from models import CounselorModel
 
 class UserRegister(Resource):
     _user_parser = reqparse.RequestParser()
@@ -53,7 +53,9 @@ class User(Resource):
 
         user = UserModel.find_by_id(user_id)
         if not user:
-            return {'message': 'User Not Found'}, 404
+            user = CounselorModel.find_by_id(user_id)
+            if not user :
+                return {'message': 'User Not Found'}, 404
         return user.json(), 200
 
     def delete(self):
@@ -64,7 +66,6 @@ class User(Resource):
             return {'message': 'User Not Found'}, 404
         user.delete_from_db()
         return {'message': 'User deleted.'}, 200
-
 
 class UserLogin(Resource):
     _user_parser = reqparse.RequestParser()
@@ -82,6 +83,9 @@ class UserLogin(Resource):
         data = UserLogin._user_parser.parse_args()
         user = UserModel.find_by_username(data['user_name'])
 
+        if not user :
+            user = CounselorModel.find_by_username(data['user_name'])
+
         # this is what the `authenticate()` function did in security.py
         if user and compare_digest(user.password, data['password']):
             # identity= is what the identity() function did in security.py—now stored in the JWT
@@ -90,7 +94,8 @@ class UserLogin(Resource):
             return {
                 'access_token': access_token,
                 'refresh_token': refresh_token,
-                'user_id':user.id
+                'user_id':user.id,
+                'user_type':user.user_type
             }, 200
 
         return {"message": "Invalid Credentials!"}, 401

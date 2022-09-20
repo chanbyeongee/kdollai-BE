@@ -7,6 +7,7 @@ def create_api(api):
     from .chat import RangeChatList, AllChatList,YMDChatList,NumberChatList
     from .child import Child,ChildList
     from .statistic import RangeStatList, AllStatList, YMDStatList, NumberStatList
+    from .reservations import GetCounselors, GetPageInfo,MakeReservation,GetUserReservation,GetCounselorReservation
     from .develop import MakeMock
 
     # dev
@@ -28,11 +29,21 @@ def create_api(api):
     api.add_resource(YMDStatList, '/stat/day/<string:day>')
     api.add_resource(AllStatList, '/stat/allday')
 
-
     # belonged to user
     api.add_resource(UserRegister, '/register')
     api.add_resource(User, '/user')
     api.add_resource(UserLogin, '/login')
+
+    # belonged to counselor
+    api.add_resource(GetCounselors, '/consultings')
+    api.add_resource(GetPageInfo, '/consulting/page/<int:id>')
+
+
+    #get reservations
+    api.add_resource(MakeReservation, '/reservation/make')
+    api.add_resource(GetUserReservation, '/reservations/user/<int:id>')
+    api.add_resource(GetCounselorReservation, '/reservations/counselor/<int:id>')
+
 
 def create_socketio(sock):
     from .chatnamespace import ChatNamespace

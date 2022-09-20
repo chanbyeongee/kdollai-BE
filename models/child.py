@@ -9,13 +9,16 @@ class ChildModel(db.Model):
     age = db.Column(db.Integer())
     gender = db.Column(db.String(80)) #0-male 1-female
     serial_number = db.Column(db.String(80))
+    profile = db.Column(db.String(80))
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    counselor_id = db.Column(db.Integer, db.ForeignKey('counselors.id'))
     chats = db.relationship('ChatModel', backref='childs')
     statistics = db.relationship('StatisticModel', backref='childs')
 
     def __init__(self,user_id,child_name, child_age,child_gender,serial_number):
         self.user_id = user_id
+
         self.name = child_name
         self.age = child_age
         self.gender = child_gender
@@ -23,7 +26,11 @@ class ChildModel(db.Model):
 
 
     def json(self):
-        return {'info':{'id': self.id, 'name': self.name, 'age':self.age, 'gender':self.gender,'serial_number':self.serial_number},
+        return {'info':
+                    {
+                        'id': self.id, 'name': self.name, 'age':self.age, 'gender':self.gender,'serial_number':self.serial_number,
+                        'thumbnail':self.profile
+                    },
                 'chats':[chat.json() for chat in self.chats]
                 }
 

@@ -7,6 +7,7 @@ class ChatModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_YMD = db.Column(db.String(80))
     date_YMDHMS = db.Column(db.String(80))
+    date_Time = db.Column(db.String(80))
     direction = db.Column(db.String(80))#0-user #1-chatbot
     utterance = db.Column(db.String(80))
     emotion = db.Column(db.String(80))
@@ -14,16 +15,17 @@ class ChatModel(db.Model):
 
     child_id = db.Column(db.Integer, db.ForeignKey('childs.id'))
 
-    def __init__(self, child_id, date_YMD, date_YMDHMS, direction, utterance):
+    def __init__(self, child_id, date_YMD, date_YMDHMS,date_Time, direction, utterance):
         self.date_YMD = date_YMD
         self.date_YMDHMS = date_YMDHMS
+        self.date_Time = date_Time
         self.direction = direction
         self.utterance = utterance
 
         self.child_id = child_id
 
     def json(self):
-        return {'day': self.date_YMD,'time': self.date_YMDHMS[8:], 'direction': self.direction,'utterance':self.utterance}
+        return {'day': self.date_YMD,'time': self.date_Time, 'direction': self.direction,'utterance':self.utterance}
 
     @classmethod
     def find_all_by_dateYMD_with_child_id(cls, child_id, day):

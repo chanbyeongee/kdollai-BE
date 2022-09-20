@@ -10,6 +10,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(80))
     user_name = db.Column(db.String(80))
     user_type = db.Column(db.String(80)) #0-parents 1-counseller 2-individual
+    user_profile = db.Column(db.String(80))
 
     provider = db.Column(db.String(80))
     pid = db.Column(db.String(80))
@@ -18,12 +19,13 @@ class UserModel(db.Model):
     res_controller = db.Column(db.String(80))
 
     childs = db.relationship('ChildModel', backref='users')
+    reservations = db.relationship('ReservationModel', backref='users')
 
-    def __init__(self, user_name,user_subname="",password="", user_type="",provider="",pid=""):
+    def __init__(self, user_name,user_subname="",password="",provider="",pid=""):
         self.user_subname = user_subname
         self.user_name = user_name
         self.password = password
-        self.user_type = user_type
+        self.user_type = "parent"
         self.provider = provider
         self.pid = pid
         self.value_container = json.dumps({"name": user_subname})
@@ -31,8 +33,15 @@ class UserModel(db.Model):
         self.cursor = None
 
     def json(self):
-        return {'info':{'id':self.id, 'user_subname':self.user_subname, 'user_name':self.user_name,'user_type':self.user_type},
-                'childs': [child.json() for child in self.childs]}
+        return {'info':
+            {
+                'id':self.id,
+                'user_subname':self.user_subname,
+                'user_name':self.user_name,
+                'user_type':self.user_type,
+                'thumbnail':self.user_profile
+            }
+        }
 
     def save_to_db(self):
         db.session.add(self)

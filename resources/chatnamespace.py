@@ -22,18 +22,34 @@ class ChatNamespace(Namespace):
 
     def on_SEND_MESSAGE(self,data):
         print(data)
-        now = datetime.now(timezone('Asia/Seoul')).strftime("%Y%m%d%H%M%S")
-        print("DAY: ", now[:8])
-        print("TIME: ", now[8:])
+        now = datetime.now(timezone('Asia/Seoul'))
+        full_date = now.strftime("%Y%m%d%H%M%S")
+        day = now.strftime("%Y%m%d")
 
-        my_chat = ChatModel(self.child_id, now[:8], now, "USER", data['message'])
+        ampm = now.strftime('%p')
+        ampm_kr = '오전' if ampm == 'AM' else '오후'
+
+        real_time = f"{ampm_kr} {now.strftime('%#H:%M')}"
+
+        print("DAY: ", day)
+        print("TIME: ", real_time)
+
+        my_chat = ChatModel(self.child_id, day,full_date, real_time, "USER", data['message'])
         my_chat.save_to_db()
 
         processed_data = main_ai.run("Hello", data['message'])
 
-        now = datetime.now(timezone('Asia/Seoul')).strftime("%Y%m%d%H%M%S")
-        my_chat = ChatModel(self.child_id, now[:8], now,"BOT", processed_data["System_Corpus"])
+        now = datetime.now(timezone('Asia/Seoul'))
+        full_date = now.strftime("%Y%m%d%H%M%S")
+        day = now.strftime("%Y%m%d")
+
+        ampm = now.strftime('%p')
+        ampm_kr = '오전' if ampm == 'AM' else '오후'
+
+        real_time = f"{ampm_kr} {now.strftime('%#H:%M')}"
+
+        my_chat = ChatModel(self.child_id, day,full_date, real_time,"BOT", processed_data["System_Corpus"])
         my_chat.save_to_db()
 
-        emit("RECEIVE_MESSAGE", {"response": processed_data["System_Corpus"], "day": now[:8], 'time': now[8:]})
+        emit("RECEIVE_MESSAGE", {"response": processed_data["System_Corpus"], "day": day, 'time': {real_time}})
 
