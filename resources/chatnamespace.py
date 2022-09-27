@@ -29,9 +29,16 @@ class ChatNamespace(Namespace):
     def on_join(self,data):
         print(f"Join room with usertype: {data['type']} serial_number: {data['serial_number']}")
 
-        self.room = data['serial_number']
+
         self.user_type = data['type']
-        join_room(self.room)
+        self.room = data['serial_number']
+
+        join_room(self.room+self.user_type)
+        if not self.room in rooms.keys():
+            rooms[self.room] = dict()
+
+        rooms[self.room][self.user_type] = True
+
         self.child_id = ChildModel.find_by_serial(data['serial_number']).id
 
         if not self.room in rooms.keys() :
@@ -68,6 +75,13 @@ class ChatNamespace(Namespace):
 
             if "SUPERVISOR" in rooms[self.room].keys():
                 if rooms[self.room]["SUPERVISOR"] :
+                    print("Hello")
+                    emit(
+                        "RECEIVE_MESSAGE",
+                        {"response": data['message'],
+                         "day": day, 'time': real_time},
+                        to=self.room + "SUPERVISOR",
+                    )
                     return
 
             day, full_date, real_time = ChatNamespace.time_shift()
@@ -79,7 +93,7 @@ class ChatNamespace(Namespace):
                 "RECEIVE_MESSAGE",
                 {"response": processed_data["System_Corpus"],
                  "day": day, 'time': real_time},
-                to=self.room,
+                to=self.room+self.user_type,
             )
 
         elif data["type"] == "SUPERVISOR":
@@ -92,7 +106,7 @@ class ChatNamespace(Namespace):
                 "RECEIVE_MESSAGE",
                 {"response": data['message'],
                  "day": day, 'time': real_time},
-                to=self.room,
+                to=self.room+"CHILD",
             )
 
     @staticmethod
