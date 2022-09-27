@@ -1,5 +1,5 @@
 import requests
-from flask_socketio import Namespace, emit, join_room, leave_room
+from flask_socketio import Namespace, emit, join_room, leave_room, close_room
 from flask import session, request
 from resources import main_ai
 from models.child import ChildModel
@@ -8,6 +8,7 @@ from models.statistic import StatisticModel, emotion_weight, init_emotion
 from datetime import datetime
 from pytz import timezone
 import json
+import eventlet
 
 rooms={}
 
@@ -21,23 +22,26 @@ class ChatNamespace(Namespace):
         #sessioned= session.get()
 
     def on_disconnect(self):
-        print("Client disconnected", )
-        leave_room(self.room+self.user_type)
-        rooms[self.room][self.user_type] = False
+        print("Client disconnected")
+        leave_room(request.sid)
+        close_room(request.sid)
+        if rooms[self.room]["SUPERVISOR"] == request.sid:
+            rooms[self.room]["SUPERVISOR"] = None
+        else :
+            rooms[self.room]["CHILD"] = None
         #sessioned = session.get()
 
     def on_join(self,data):
-        print(f"Join room with usertype: {data['type']} serial_number: {data['serial_number']}")
-
+        print(f"Join room with usertype: {data['type']} serial_number: {data['serial_number']} sid:{request.sid}")
 
         self.user_type = data['type']
         self.room = data['serial_number']
 
-        join_room(self.room+self.user_type)
-        if not self.room in rooms.keys():
-            rooms[self.room] = dict()
+        join_room(request.sid)
+        if self.room not in rooms.keys():
+            rooms[self.room] = {"SUPERVISOR":None,"CHILD":None}
 
-        rooms[self.room][self.user_type] = True
+        rooms[self.room][self.user_type] = request.sid
 
         self.child_id = ChildModel.find_by_serial(data['serial_number']).id
 
@@ -68,28 +72,27 @@ class ChatNamespace(Namespace):
             #stat = ChatNamespace.stat_handler(stat=stat,processed_data=processed_data)
             #stat.save_to_db()
 
-            if "SUPERVISOR" in rooms[self.room].keys():
-                if rooms[self.room]["SUPERVISOR"] :
-                    print("Hello")
-                    emit(
-                        "RECEIVE_MESSAGE",
-                        {"response": data['message'],
-                         "day": day, 'time': real_time},
-                        to=self.room + "SUPERVISOR",
-                    )
-                    return
+            print(rooms)
 
-            day, full_date, real_time = ChatNamespace.time_shift()
+            if rooms[self.room]["SUPERVISOR"] :
+                emit(
+                    "RECEIVE_MESSAGE",
+                    {"response": data['message'],
+                     "day": day, 'time': real_time},
+                    to=rooms[self.room]["SUPERVISOR"],
+                )
+            else:
+                day, full_date, real_time = ChatNamespace.time_shift()
 
-            my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", processed_data["System_Corpus"])
-            my_chat.save_to_db()
+                my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", processed_data["System_Corpus"])
+                my_chat.save_to_db()
 
-            emit(
-                "RECEIVE_MESSAGE",
-                {"response": processed_data["System_Corpus"],
-                 "day": day, 'time': real_time},
-                to=self.room+self.user_type,
-            )
+                emit(
+                    "RECEIVE_MESSAGE",
+                    {"response": processed_data["System_Corpus"],
+                     "day": day, 'time': real_time},
+                    to=rooms[self.room]["CHILD"],
+                )
 
         elif data["type"] == "SUPERVISOR":
             day, full_date, real_time = ChatNamespace.time_shift()
@@ -101,8 +104,10 @@ class ChatNamespace(Namespace):
                 "RECEIVE_MESSAGE",
                 {"response": data['message'],
                  "day": day, 'time': real_time},
-                to=self.room+"CHILD",
+                to=rooms[self.room]["CHILD"],
             )
+
+        eventlet.sleep(0)
 
     @staticmethod
     def time_shift():
@@ -118,7 +123,7 @@ class ChatNamespace(Namespace):
         return day, full_date, real_time
 
     @staticmethod
-    def stat_handler(stat,processed_data):
+    def stat_handler(stat,processed_data,data):
         # emotion handler
         temp_emotion = json.loads(stat.emotions)
         temp_emotion[processed_data['Emotion']] += 1
@@ -148,7 +153,7 @@ class ChatNamespace(Namespace):
         temp_relationship = json.loads(stat.relation_ship)
 
         for key in processed_data["NER"]:
-            if not key in temp_relationship.keys():
+            if key not in temp_relationship.keys():
                 temp_relationship[key] = init_emotion.copy()
 
             temp_relationship[key][processed_data["Emotion"]] += 1
