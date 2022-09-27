@@ -22,7 +22,7 @@ class ChatNamespace(Namespace):
 
     def on_disconnect(self):
         print("Client disconnected", )
-        leave_room(self.room)
+        leave_room(self.room+self.user_type)
         rooms[self.room][self.user_type] = False
         #sessioned = session.get()
 
@@ -40,11 +40,6 @@ class ChatNamespace(Namespace):
         rooms[self.room][self.user_type] = True
 
         self.child_id = ChildModel.find_by_serial(data['serial_number']).id
-
-        if not self.room in rooms.keys() :
-            rooms[self.room] = dict()
-
-        rooms[self.room][self.user_type] = True
 
     def on_SEND_MESSAGE(self,data):
         if not self.child_id :
@@ -101,7 +96,7 @@ class ChatNamespace(Namespace):
 
             my_chat = ChatModel(self.child_id, day, full_date, real_time, "SUPERVISOR", data['message'])
             my_chat.save_to_db()
-
+            print("Hello")
             emit(
                 "RECEIVE_MESSAGE",
                 {"response": data['message'],
