@@ -6,30 +6,80 @@ init_emotion={
     "불만":0, "중립":0, "당혹":0, "기쁨":0, "걱정":0, "질투":0, "슬픔":0, "죄책감":0, "연민":0
 }
 
+init_topic={
+    "취미":0,"날씨_및_계절":0,"반려동물":0, "방송_미디어":0, "식음료":0, "학교":0, "가족":0, "건강":0
+}
+
+init_subtopic={
+    "스포츠":0,"여행":0,"게임":0, "영화_만화":0, "방송_연예":0
+}
+
+emotion_weight={
+    "중립":0,"기쁨":3, "연민":-1, "당혹":-1, "질투":-1, "걱정":-1, "불만":-2,"죄책감":-2, "슬픔":-2
+}
+
+init_badwords={
+    "씨발":0, "개새끼":0, "존나":0, "자살":0
+}
+
+init_badsentences={
+    "sentences":[]
+}
+
+init_relationship={}
+
+
 class StatisticModel(db.Model):
     __tablename__ = 'statistics'
     id = db.Column(db.Integer, primary_key=True)
     date_YMD = db.Column(db.String(80))
     emotions = db.Column(db.String(80))
-    situation = db.Column(db.String(80))
+    emotion_score = db.Column(db.Integer())
     total = db.Column(db.Integer())
+
+    situation = db.Column(db.String(80))
+    subtopic = db.Column(db.String(80))
+
+    badwords = db.Column(db.String(80))
+    bad_sentences = db.Column(db.String(200))
+
+    relation_ship = db.Column(db.String(200))
 
     child_id = db.Column(db.Integer, db.ForeignKey('childs.id'))
 
     def __init__(self, date_YMD,child_id):
         self.date_YMD = date_YMD
         self.emotions = json.dumps(init_emotion)
-        self.situation = ""
+        self.emotion_score = 50
         self.total = 0
+
+        self.situation = json.dumps(init_topic)
+        self.subtopic = json.dumps(init_subtopic)
+
+        self.badwords = json.dumps(init_badwords)
+        self.bad_sentences = json.dumps(init_badsentences)
+
+        self.relation_ship = json.dumps(init_relationship)
 
         self.child_id = child_id
 
     def json(self):
         return {'date': self.date_YMD,
                 "chart":{
-
-                    'emotions': json.loads(self.emotions),
-                    'situation': self.situation
+                    "emotion":{
+                        'emotions': json.loads(self.emotions),
+                        'emotion_score': self.emotion_score,
+                        'total':self.total
+                    },
+                    'situation':{
+                        'topic': json.loads(self.situation),
+                        'subtopic': json.loads(self.subtopic),
+                    },
+                    "badness":{
+                        'bad_words': json.loads(self.badwords),
+                        "bad_sentences": json.loads(self.bad_sentences)
+                    },
+                    'relationship' : json.loads(self.relation_ship)
                     }
                 }
 

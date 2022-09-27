@@ -1,4 +1,5 @@
 from models import UserModel,ChatModel,StatisticModel,ChildModel,CounselorModel, IndexPageModel, ReservationModel
+from models.statistic import emotion_weight, init_emotion
 import json
 
 
@@ -81,7 +82,6 @@ def make_reservation(user,counselor):
 def make_stats(child):
 
     make_chats(child)
-
     stat = StatisticModel(
         date_YMD="20220917",
         child_id=child.id
@@ -90,6 +90,12 @@ def make_stats(child):
     temp["중립"]+=1
     stat.emotions = json.dumps(temp)
     stat.total +=1
+
+    temp = json.loads(stat.situation)
+    temp["가족"] += 1
+    stat.situation = json.dumps(temp)
+
+
     stat.save_to_db()
 
     stat = StatisticModel(
@@ -98,8 +104,19 @@ def make_stats(child):
     )
     temp = json.loads(stat.emotions)
     temp["슬픔"] += 1
+    stat.emotion_score += emotion_weight["슬픔"]
     stat.emotions = json.dumps(temp)
     stat.total +=1
+
+    temp = json.loads(stat.situation)
+    temp["학교"] += 1
+    stat.situation = json.dumps(temp)
+
+    temp = json.loads(stat.relation_ship)
+    temp["친구"] = init_emotion.copy()
+    temp["친구"]["슬픔"] += 1
+    stat.relation_ship = json.dumps(temp)
+
     stat.save_to_db()
 
     stat = StatisticModel(
@@ -108,8 +125,61 @@ def make_stats(child):
     )
     temp = json.loads(stat.emotions)
     temp["기쁨"] += 1
+    stat.emotion_score += emotion_weight["기쁨"]
     stat.emotions = json.dumps(temp)
     stat.total += 1
+
+    temp = json.loads(stat.situation)
+    temp["학교"] += 1
+    stat.situation = json.dumps(temp)
+
+
+    stat.save_to_db()
+
+    stat = StatisticModel(
+        date_YMD="20220920",
+        child_id=child.id
+    )
+    temp = json.loads(stat.emotions)
+    temp["불만"] += 1
+    stat.emotion_score += emotion_weight["불만"]
+    stat.emotions = json.dumps(temp)
+    stat.total += 1
+
+    temp = json.loads(stat.situation)
+    temp["건강"] += 1
+    stat.situation = json.dumps(temp)
+
+    temp = json.loads(stat.badwords)
+    temp["씨발"] += 1
+    stat.badwords = json.dumps(temp)
+    temp = json.loads(stat.bad_sentences)
+    temp["sentences"].append("씨발! 나 죽고싶어!")
+    stat.bad_sentences = json.dumps(temp)
+
+    stat.save_to_db()
+
+    stat = StatisticModel(
+        date_YMD="20220922",
+        child_id=child.id
+    )
+    temp = json.loads(stat.emotions)
+    temp["슬픔"] += 1
+    stat.emotion_score += emotion_weight["슬픔"]
+    stat.emotions = json.dumps(temp)
+    stat.total += 1
+
+    temp = json.loads(stat.situation)
+    temp["가족"] += 1
+    stat.situation = json.dumps(temp)
+
+    temp = json.loads(stat.relation_ship)
+    temp["엄마"] = init_emotion.copy()
+    temp["엄마"]["슬픔"] += 1
+    temp["아빠"] = init_emotion.copy()
+    temp["아빠"]["슬픔"] += 1
+    stat.relation_ship = json.dumps(temp)
+
     stat.save_to_db()
 
 def make_chats(child):
@@ -170,6 +240,46 @@ def make_chats(child):
         date_Time="오전 8:01",
         direction="BOT",
         utterance="그래! 이따 보자!"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20220920",
+        date_YMDHMS="20220920123021",
+        date_Time="오후 12:30",
+        direction="USER",
+        utterance="씨발! 나 죽고싶어!"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20220920",
+        date_YMDHMS="20220920123024",
+        date_Time="오후 12:30",
+        direction="BOT",
+        utterance="무슨 일 있어?"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20220922",
+        date_YMDHMS="20220922210315",
+        date_Time="오후 9:03",
+        direction="USER",
+        utterance="엄마 아빠가 너무 미워..."
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20220922",
+        date_YMDHMS="20220922210318",
+        date_Time="오후 9:03",
+        direction="BOT",
+        utterance="혹시 자세히 말해줄 수 있어??"
     )
     chat.save_to_db()
 
