@@ -399,7 +399,8 @@ def make_stats(child):
     stat.total +=1
 
     temp = json.loads(stat.situation)
-    temp["가족"] += 1
+    temp["가족"]["total"] += 1
+    temp["가족"]["emotion"]["중립"]+=1
     stat.situation = json.dumps(temp)
 
 
@@ -416,12 +417,14 @@ def make_stats(child):
     stat.total +=1
 
     temp = json.loads(stat.situation)
-    temp["학교"] += 1
+    temp["학교"]["total"] += 1
+    temp["학교"]["emotion"]["슬픔"] += 1
     stat.situation = json.dumps(temp)
 
     temp = json.loads(stat.relation_ship)
-    temp["친구"] = init_emotion.copy()
-    temp["친구"]["슬픔"] += 1
+    temp["친구"]={}
+    temp["친구"]["emotion"] = init_emotion.copy()
+    temp["친구"]["emotion"]["슬픔"] += 1
     stat.relation_ship = json.dumps(temp)
 
     stat.save_to_db()
@@ -437,7 +440,8 @@ def make_stats(child):
     stat.total += 1
 
     temp = json.loads(stat.situation)
-    temp["학교"] += 1
+    temp["학교"]["total"] += 1
+    temp["학교"]["emotion"]["기쁨"]+=1
     stat.situation = json.dumps(temp)
 
 
@@ -454,7 +458,8 @@ def make_stats(child):
     stat.total += 1
 
     temp = json.loads(stat.situation)
-    temp["건강"] += 1
+    temp["건강"]["total"] += 1
+    temp["건강"]["emotion"]["불만"]+=1
     stat.situation = json.dumps(temp)
 
     temp = json.loads(stat.badwords)
@@ -477,14 +482,17 @@ def make_stats(child):
     stat.total += 1
 
     temp = json.loads(stat.situation)
-    temp["가족"] += 1
+    temp["가족"]["total"] += 1
+    temp["가족"]["emotion"]["슬픔"]+=1
     stat.situation = json.dumps(temp)
 
     temp = json.loads(stat.relation_ship)
-    temp["엄마"] = init_emotion.copy()
-    temp["엄마"]["슬픔"] += 1
-    temp["아빠"] = init_emotion.copy()
-    temp["아빠"]["슬픔"] += 1
+    temp["엄마"]={}
+    temp["엄마"]["emotion"] = init_emotion.copy()
+    temp["엄마"]["emotion"]["슬픔"] += 1
+    temp["아빠"] = {}
+    temp["아빠"]["emotion"] = init_emotion.copy()
+    temp["아빠"]["emotion"]["슬픔"] += 1
     stat.relation_ship = json.dumps(temp)
 
     stat.save_to_db()

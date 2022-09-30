@@ -49,7 +49,9 @@ jwt = JWTManager(app) #this will make endpoint named '/auth' (username,password)
 #         return {'is_admin': True}
 #     return {'is_admin': False}
 #
-# @jwt.invalid_token_loader
+# @jwt.invalid_token_loa
+#
+# der
 # def invalid_token_callback(error):  # we have to keep the argument here, since it's passed in by the caller internally
 #     return jsonify({
 #         'message': 'Signature verification failed.',

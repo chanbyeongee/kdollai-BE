@@ -7,11 +7,22 @@ init_emotion={
 }
 
 init_topic={
-    "취미":0,"날씨_및_계절":0,"반려동물":0, "방송_미디어":0, "식음료":0, "학교":0, "가족":0, "건강":0
+    "취미":{"total":0,"emotion":init_emotion.copy()},
+    "날씨_및_계절":{"total":0,"emotion":init_emotion.copy()},
+    "반려동물":{"total":0,"emotion":init_emotion.copy()},
+    "방송_미디어":{"total":0,"emotion":init_emotion.copy()},
+    "식음료":{"total":0,"emotion":init_emotion.copy()},
+    "학교":{"total":0,"emotion":init_emotion.copy()},
+    "가족":{"total":0,"emotion":init_emotion.copy()},
+    "건강":{"total":0,"emotion":init_emotion.copy()}
 }
 
 init_subtopic={
-    "스포츠":0,"여행":0,"게임":0, "영화_만화":0, "방송_연예":0
+    "스포츠":{"total":0,"emotion":init_emotion.copy()},
+    "여행":{"total":0,"emotion":init_emotion.copy()},
+    "게임":{"total":0,"emotion":init_emotion.copy()},
+    "영화_만화":{"total":0,"emotion":init_emotion.copy()},
+    "방송_연예":{"total":0,"emotion":init_emotion.copy()}
 }
 
 emotion_weight={
@@ -64,6 +75,28 @@ class StatisticModel(db.Model):
         self.child_id = child_id
 
     def json(self):
+
+        situations = json.loads(self.situation)
+
+        for key in situations.keys():
+            situations[key]["score"] = 50
+            for emo_key in init_emotion.keys():
+                situations[key]["score"] += situations[key]["emotion"][emo_key] * emotion_weight[emo_key]
+
+        subtopics = json.loads(self.subtopic)
+
+        for key in subtopics.keys():
+            subtopics[key]["score"] = 50
+            for emo_key in init_emotion.keys():
+                subtopics[key]["score"] += subtopics[key]["emotion"][emo_key] * emotion_weight[emo_key]
+
+        relationships = json.loads(self.relation_ship)
+
+        for key in relationships.keys():
+            relationships[key]["score"] = 50
+            for emo_key in init_emotion.keys():
+                relationships[key]["score"] += relationships[key]["emotion"][emo_key] * emotion_weight[emo_key]
+
         return {'date': self.date_YMD,
                 "chart":{
                     "emotion":{
@@ -72,14 +105,14 @@ class StatisticModel(db.Model):
                         'total':self.total
                     },
                     'situation':{
-                        'topic': json.loads(self.situation),
-                        'subtopic': json.loads(self.subtopic),
+                        'topic': situations,
+                        'subtopic': subtopics,
                     },
                     "badness":{
                         'bad_words': json.loads(self.badwords),
                         "bad_sentences": json.loads(self.bad_sentences)
                     },
-                    'relationship' : json.loads(self.relation_ship)
+                    'relationship' : relationships
                     }
                 }
 

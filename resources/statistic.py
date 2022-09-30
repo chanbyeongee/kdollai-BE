@@ -36,11 +36,28 @@ def summary_situation(stats):
         topic_temp = json.loads(stat.situation)
         sub_temp = json.loads(stat.subtopic)
         for key in ret_topics.keys():
-            ret_topics[key] += topic_temp[key]
+            ret_topics[key]["total"] += topic_temp[key]["total"]
+
+            for emo_key in init_emotion.keys():
+                ret_topics[key]["emotion"][emo_key] += topic_temp[key]["emotion"][emo_key]
 
         for key in ret_subtopics.keys():
-            ret_subtopics[key] += sub_temp[key]
+            ret_subtopics[key]["total"] += sub_temp[key]["total"]
 
+            for emo_key in init_emotion.keys():
+                ret_subtopics[key]["emotion"][emo_key] += sub_temp[key]["emotion"][emo_key]
+
+    for key in ret_topics.keys():
+        temp_sum=50
+        for emo_key in init_emotion.keys():
+            temp_sum += ret_topics[key]["emotion"][emo_key]*emotion_weight[emo_key]
+        ret_topics[key]["score"]=temp_sum
+
+    for key in ret_subtopics.keys():
+        temp_sum=50
+        for emo_key in init_emotion.keys():
+            temp_sum += ret_subtopics[key]["emotion"][emo_key]*emotion_weight[emo_key]
+        ret_subtopics[key]["score"]=temp_sum
 
     return ret_topics.copy(), ret_subtopics.copy()
 
@@ -63,24 +80,23 @@ def summary_badness(stats):
 
 def summary_relationship(stats):
     ret_relationship = init_relationship.copy()
-    real_relationship = {}
+
     for stat in stats:
         relationships = json.loads(stat.relation_ship)
         for key in relationships.keys():
             if not (key in ret_relationship.keys() ):
-                ret_relationship[key]=init_emotion.copy()
+                ret_relationship[key]={}
+                ret_relationship[key]["emotion"]=init_emotion.copy()
 
-            for emotion_key in ret_relationship[key].keys():
-                ret_relationship[key][emotion_key] += relationships[key][emotion_key]
-
+            for emotion_key in init_emotion.keys():
+                ret_relationship[key]["emotion"][emotion_key] += relationships[key]["emotion"][emotion_key]
 
     for key in ret_relationship.keys():
-        real_relationship[key] = 50
+        ret_relationship[key]["score"]=50
         for emotion_key in init_emotion.keys():
+            ret_relationship[key]["score"] += ret_relationship[key]["emotion"][emotion_key] * emotion_weight[emotion_key]
 
-            real_relationship[key] += ret_relationship[key][emotion_key] * emotion_weight[emotion_key]
-
-    return real_relationship.copy()
+    return ret_relationship.copy()
 
 class NumberStatList(Resource):
     def get(self,date, number):

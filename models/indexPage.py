@@ -46,6 +46,7 @@ class IndexPageModel(db.Model):
                             'close': counselor.available_end,
                             'lunch': self.lunch_time,
                         },
+                        "breif":counselor.brief_desc,
                         "thumbnail":counselor.profile,
                         'introduce':[content.strip() for content in self.introduction.split("\n") if(content.strip())]
                     },
