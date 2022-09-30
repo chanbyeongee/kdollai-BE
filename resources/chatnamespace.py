@@ -18,7 +18,7 @@ class ChatNamespace(Namespace):
     child_id = None
 
     def on_connect(self):
-        print("Client connected",)
+        print("Client connected")
         #sessioned= session.get()
 
     def on_disconnect(self):
@@ -38,6 +38,7 @@ class ChatNamespace(Namespace):
         self.room = data['serial_number']
 
         join_room(request.sid)
+
         if self.room not in rooms.keys():
             rooms[self.room] = {"SUPERVISOR":None,"CHILD":None}
 

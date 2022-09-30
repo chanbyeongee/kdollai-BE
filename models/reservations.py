@@ -12,7 +12,7 @@ class ReservationModel(db.Model):
     status = db.Column(db.String(80))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     counselor_id = db.Column(db.Integer, db.ForeignKey('counselors.id'))
-    content = db.Column(db.String(100))
+    content = db.Column(db.String(1000))
 
     def __init__(self,day,begin,end,content,user_id,counselor_id):
         self.day = day

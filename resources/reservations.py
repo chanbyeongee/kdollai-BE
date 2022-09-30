@@ -90,7 +90,7 @@ class GetUserReservation(Resource):
                     "begin":reservation.begin,
                     "end":reservation.end,
                     "status":reservation.status,
-                    "content": reservation.content
+                    "content":[content.strip() for content in reservation.content.split("\n") if((content.strip()))]
                 }
             }
             for reservation in reservations
@@ -108,7 +108,7 @@ class GetCounselorReservation(Resource):
                     "begin":reservation.begin,
                     "end":reservation.end,
                     "status":reservation.status,
-                    "content":reservation.content
+                    "content":[content.strip() for content in reservation.content.split("\n") if((content.strip()))]
                 }
             }
             for reservation in reservations

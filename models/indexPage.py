@@ -46,12 +46,13 @@ class IndexPageModel(db.Model):
                             'close': counselor.available_end,
                             'lunch': self.lunch_time,
                         },
-                        'introduce':self.introduction
+                        "thumbnail":counselor.profile,
+                        'introduce':[content.strip() for content in self.introduction.split("\n") if(content.strip())]
                     },
                 "main":
                     {
                         'image':self.main_image,
-                        'desc': self.main_desc,
+                        'desc':[content.strip() for content in self.main_desc.split("\n") if(content.strip())],
                         'address':self.address,
                         'post_address':self.post_address,
                         'location':{
