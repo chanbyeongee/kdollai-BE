@@ -82,35 +82,63 @@ class MakeReservation(Resource):
 class GetUserReservation(Resource):
     def get(self,id):
         reservations = ReservationModel.find_by_user_id(id)
-        reservations_list=[
-            {
-                "counselor":CounselorModel.find_by_id(reservation.counselor_id).json(),
-                "detail":{
-                    "day":reservation.day,
-                    "begin":reservation.begin,
-                    "end":reservation.end,
+        if not reservations == None:
+            reservations_list=[
+                {
                     "status":reservation.status,
-                    "content":[content.strip() for content in reservation.content.split("\n") if((content.strip()))]
+                    "counselor":CounselorModel.find_by_id(reservation.counselor_id).json(),
+                    "detail":{
+                        "day":reservation.day,
+                        "begin":reservation.begin,
+                        "end":reservation.end,
+
+                        "content":[content.strip() for content in reservation.content.split("\n") if((content.strip()))]
+                    }
                 }
-            }
-            for reservation in reservations
-        ]
+                for reservation in reservations
+            ]
+        else :
+            reservations_list = []
         return {"reservations":reservations_list}
 
 class GetCounselorReservation(Resource):
     def get(self,id):
         reservations = ReservationModel.find_by_counselor_id(id)
-        reservations_list=[
-            {
-                "user":UserModel.find_by_id(reservation.user_id).json(),
-                "detail":{
-                    "day":reservation.day,
-                    "begin":reservation.begin,
-                    "end":reservation.end,
-                    "status":reservation.status,
-                    "content":[content.strip() for content in reservation.content.split("\n") if((content.strip()))]
+        if not reservations == None:
+            reservations_list=[
+                {
+                    "status": reservation.status,
+                    "user":UserModel.find_by_id(reservation.user_id).json(),
+                    "detail":{
+                        "day":reservation.day,
+                        "begin":reservation.begin,
+                        "end":reservation.end,
+
+                        "content":[content.strip() for content in reservation.content.split("\n") if((content.strip()))]
+                    }
                 }
-            }
-            for reservation in reservations
-        ]
+                for reservation in reservations
+            ]
+        else :
+            reservations_list = []
         return {"reservations":reservations_list}
+
+class AcceptReservation(Resource):
+    def post(self,id):
+        reservation = ReservationModel.find_by_id(id)
+        reservation.status = "ACCEPTED"
+        reservation.save_to_db()
+        return {"message":"ok"},200
+
+class RejectReservation(Resource):
+    def post(self,id):
+        reservation = ReservationModel.find_by_id(id)
+        reservation.status = "REJECTED"
+        reservation.save_to_db()
+        return {"message": "ok"}, 200
+
+class CancleReservation(Resource):
+    def delete(self,id):
+        reservation = ReservationModel.find_by_id(id)
+        reservation.delete_from_db()
+        return {"message": "ok"}, 200

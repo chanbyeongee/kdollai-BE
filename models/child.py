@@ -47,6 +47,10 @@ class ChildModel(db.Model):
         return cls.query.filter_by(user_id=user_id).first()
 
     @classmethod
+    def find_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
+
+    @classmethod
     def find_by_serial(cls, SN):
         return cls.query.filter_by(serial_number=SN).first()
 

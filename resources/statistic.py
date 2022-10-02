@@ -5,232 +5,102 @@ from models.statistic import StatisticModel, init_emotion, init_topic, init_subt
 from datetime import datetime,timedelta
 import json
 
+sentences = {
+    "불만" : [
+        "{name}이가 현재 삶에 만족하지 못하는 것 같아요.",
+        "어떠한 점에서 불만을 느끼는지 대화를 나눠보는 건 어떨까요?"
+    ],
+    "중립":[
+        "{name}이는 최근에 큰 문제는 없었어요.",
+        "하지만 말하지 못하는 마음을 감추고 있을 지도 몰라요. 오늘도 평소처럼 대화를 나눠보시는 건 어떨까요?"
+    ],
+    "당혹":[
+        "최근에 {name}이가 놀랄 만한 일이 있었나봐요.",
+        "아이에게 평소보다 조심스럽게 다가가 보는 건 어떨까요?"
+    ],
+    "기쁨":[
+        "최근에 {name}이는 기쁨이 충만한 것 같아요.",
+        "함께 기뻤던 일에 대해서 얘기를 나눠보는 건 어떨까요?"
+    ],
+    "걱정":[
+        "요즘 {name}이에게 걱정스러운 일이 있나봐요.",
+        "아이가 어떤 상황에 놓여있는지 살펴보고 대화를 나눠보는 건 어떨까요?",
+    ],
+    "질투":[
+        "{name}이가 남에게 질투를 느끼며 스트레스를 받고 있어요.",
+        "이럴 때일 수록 자존감을 복돋아줄 수 있는 응원 한마디 어떨까요?"
+    ],
+    "슬픔":[
+        "{name}이의 마음에 비가 잔뜩 내리고 있네요.",
+        "무슨 일이 있었는지 물어보면서 천천히 접근해보세요."
+    ],
+    "죄책감":[
+        "{name}이가 스스로 책임질 일 때문에 힘들어 하고 있는것 같아요.",
+        "오늘은 아이의 말에 조금 더 귀 기울여 주는 건 어떨까요?"
+    ],
+    "연민":[
+        "최근 {name}이가 무언가를 불쌍해 하고 있어요.",
+        "따듯한 마음을 가진 아이가 올바르게 성장할 수 있게 격려해주세요."
+    ]
+}
+
+
 def summary_emotion(stats):
     ret_emotions = init_emotion.copy()
-    ret_score = 0
     total_cnt = 0
 
     for stat in stats:
         temp = json.loads(stat.emotions)
         total_cnt += stat.total
-        ret_score += stat.emotion_score
+
         for key in ret_emotions.keys():
             ret_emotions[key] += temp[key]
 
+    max_key = max(ret_emotions,key=ret_emotions.get)
+    return max_key
 
-    ret_score /= len(stats)
-
-    if ret_score < 0:
-        ret_score = 0
-
-    elif ret_score > 100:
-        ret_score = 100
-
-    return total_cnt, ret_emotions.copy(), ret_score
-
-def summary_situation(stats):
-    ret_topics = init_topic.copy()
-    ret_subtopics = init_subtopic.copy()
-
-    for stat in stats:
-        topic_temp = json.loads(stat.situation)
-        sub_temp = json.loads(stat.subtopic)
-        for key in ret_topics.keys():
-            ret_topics[key]["total"] += topic_temp[key]["total"]
-
-            for emo_key in init_emotion.keys():
-                ret_topics[key]["emotion"][emo_key] += topic_temp[key]["emotion"][emo_key]
-
-        for key in ret_subtopics.keys():
-            ret_subtopics[key]["total"] += sub_temp[key]["total"]
-
-            for emo_key in init_emotion.keys():
-                ret_subtopics[key]["emotion"][emo_key] += sub_temp[key]["emotion"][emo_key]
-
-    for key in ret_topics.keys():
-        temp_sum=50
-        for emo_key in init_emotion.keys():
-            temp_sum += ret_topics[key]["emotion"][emo_key]*emotion_weight[emo_key]
-        ret_topics[key]["score"]=temp_sum
-
-    for key in ret_subtopics.keys():
-        temp_sum=50
-        for emo_key in init_emotion.keys():
-            temp_sum += ret_subtopics[key]["emotion"][emo_key]*emotion_weight[emo_key]
-        ret_subtopics[key]["score"]=temp_sum
-
-    return ret_topics.copy(), ret_subtopics.copy()
-
-def summary_badness(stats):
-    ret_badwords = init_badwords.copy()
-    ret_badsentences = init_badsentences.copy()
-
-    for stat in stats:
-        badwords_temp = json.loads(stat.badwords)
-        badsentences_temp = json.loads(stat.bad_sentences)
-
-        for key in ret_badwords.keys():
-            ret_badwords[key] += badwords_temp[key]
-
-        for content in badsentences_temp["sentences"] :
-            ret_badsentences["sentences"].append(content)
-
-    return ret_badwords.copy(), ret_badsentences.copy()
-
-
-def summary_relationship(stats):
-    ret_relationship = init_relationship.copy()
-
-    for stat in stats:
-        relationships = json.loads(stat.relation_ship)
-        for key in relationships.keys():
-            if not (key in ret_relationship.keys() ):
-                ret_relationship[key]={}
-                ret_relationship[key]["emotion"]=init_emotion.copy()
-
-            for emotion_key in init_emotion.keys():
-                ret_relationship[key]["emotion"][emotion_key] += relationships[key]["emotion"][emotion_key]
-
-    for key in ret_relationship.keys():
-        ret_relationship[key]["score"]=50
-        for emotion_key in init_emotion.keys():
-            ret_relationship[key]["score"] += ret_relationship[key]["emotion"][emotion_key] * emotion_weight[emotion_key]
-
-    return ret_relationship.copy()
-
-class NumberStatList(Resource):
-    def get(self,date, number):
-
-        child_id = 1
-
-        end = datetime.strptime(date, '%Y%m%d')
-        begin = (end - timedelta(number-1)).strftime("%Y%m%d")
-
-        stats = StatisticModel.find_range_with_child_id(child_id, begin, date)
-
-        if not stats :
-            return {
-                'isSummary':False,
-                "statistics" : []
-               }
-
-        total_cnt, ret_emotions, ret_score= summary_emotion(stats)
-        topics, sub_topic = summary_situation(stats)
-        badwords, badsentences = summary_badness(stats)
-        relationships = summary_relationship(stats)
-
-        return {
-                'isSummary':True,
-                   'summary':{
-                       "emotion":{
-                        "total":total_cnt,
-                        'emotions': ret_emotions,
-                        'emotion_score': ret_score,
-                       },
-                       'situation':{
-                           'topic':topics,
-                           'subtopic':sub_topic
-                       },
-                       "badness":{
-                            "bad_words":badwords,
-                            "bad_sentences":badsentences
-                       },
-                       'relationship':relationships
-                    },
-                    "statistics" : [stat.json() for stat in stats]
-               }, 200
-
-
-class RangeStatList(Resource):
-    def get(self,end,begin):
-        child_id = 1
-
-        stats = StatisticModel.find_range_with_child_id(child_id, begin, end)
-
-        if not stats :
-            return {
-                'isSummary': False,
-                "statistics": []
-            }
-
-        total_cnt, ret_emotions, ret_score = summary_emotion(stats)
-        topics, sub_topic = summary_situation(stats)
-        badwords, badsentences = summary_badness(stats)
-        relationships = summary_relationship(stats)
-
-
-        return {
-                   'isSummary': True,
-                   'summary': {
-                       "emotion": {
-                           "total": total_cnt,
-                           'emotions': ret_emotions,
-                           'emotion_score': ret_score,
-                       },
-                       'situation': {
-                           'topic': topics,
-                           'subtopic': sub_topic
-                       },
-                       "badness": {
-                           "bad_words": badwords,
-                           "bad_sentences": badsentences
-                       },
-                       'relationship': relationships
-                   },
-                   "statistics": [stat.json() for stat in stats]
-               }, 200
-
-class YMDStatList(Resource):
+class RecentWords(Resource):
     def get(self,day):
         child_id = 1
 
-        stat = StatisticModel.find_by_dateYMD_with_child_id(child_id,day)
+        end = datetime.strptime(day, '%Y%m%d')
+        begin = (end - timedelta(6)).strftime("%Y%m%d")
 
-        if not stat :
-            return {
-                'isSummary': False,
-                "statistics": []
-            }
+        stats = StatisticModel.find_range_with_child_id(child_id, begin, day)
+        child = ChildModel.find_by_id(child_id)
 
-        return {
-                   'isSummary': False,
-                   "statistics" : [stat.json()]
-               }, 200
+        if not stats:
+            return {"message":[f"최근 1주일 간 이용한 기록이 없네요... 저는 {child.name[1:]}이와 더 이야기를 나누고 싶어요!"]}
 
-class AllStatList(Resource):
+        emo_key = summary_emotion(stats)
+
+        return {"message":[sentence.format(name=child.name[1:]) for sentence in sentences[emo_key]]}
+
+class RecentUse(Resource):
     def get(self):
         child_id = 1
+        chats = ChatModel.find_all_with_child_id(child_id)
 
-        stats = StatisticModel.find_by_child_id(child_id)
+        if not chats:
+            return {"message":None}
+        else :
+            recent=chats[-1]
+            return {"message":recent.date_YMD}
 
-        if not stats :
-            return {
-                'isSummary': False,
-                "statistics": []
+class RecentScenario(Resource):
+    def get(self,day):
+
+        return {"message":[
+            {
+                "name":"슬픔 관련 대화",
+                "number":2
+            },
+            {
+                "name":"학교/교우/성적 관련 대화",
+                "number":1
+            },
+            {
+                "name": "가족/친척 관련 대화",
+                "number": 4
             }
-
-        total_cnt, ret_emotions, ret_score = summary_emotion(stats)
-        topics, sub_topic = summary_situation(stats)
-        badwords, badsentences = summary_badness(stats)
-        relationships = summary_relationship(stats)
-
-        return {
-                   'isSummary': True,
-                   'summary': {
-                       "emotion": {
-                           "total": total_cnt,
-                           'emotions': ret_emotions,
-                           'emotion_score': ret_score,
-                       },
-                       'situation': {
-                           'topic': topics,
-                           'subtopic': sub_topic
-                       },
-                       "badness": {
-                           "bad_words": badwords,
-                           "bad_sentences": badsentences
-                       },
-                       'relationship': relationships
-                   },
-                   "statistics": [stat.json() for stat in stats]
-               }, 200
+        ]}

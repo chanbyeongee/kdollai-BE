@@ -74,7 +74,19 @@ class StatisticModel(db.Model):
 
         self.child_id = child_id
 
-    def json(self):
+    def emo_json(self):
+        return {
+            'date': self.date_YMD,
+                "chart":{
+                    "emotion":{
+                        'emotions': json.loads(self.emotions),
+                        'emotion_score': self.emotion_score,
+                        'total':self.total
+                    }
+                }
+            }
+
+    def topic_json(self):
 
         situations = json.loads(self.situation)
 
@@ -90,8 +102,20 @@ class StatisticModel(db.Model):
             for emo_key in init_emotion.keys():
                 subtopics[key]["score"] += subtopics[key]["emotion"][emo_key] * emotion_weight[emo_key]
 
-        relationships = json.loads(self.relation_ship)
 
+        return {
+            'date': self.date_YMD,
+                "chart":{
+                    'situation':{
+                        'topic': situations,
+                        'subtopic': subtopics,
+                    },
+                }
+            }
+
+    def relation_json(self):
+
+        relationships = json.loads(self.relation_ship)
         for key in relationships.keys():
             relationships[key]["score"] = 50
             for emo_key in init_emotion.keys():
@@ -99,21 +123,20 @@ class StatisticModel(db.Model):
 
         return {'date': self.date_YMD,
                 "chart":{
-                    "emotion":{
-                        'emotions': json.loads(self.emotions),
-                        'emotion_score': self.emotion_score,
-                        'total':self.total
-                    },
-                    'situation':{
-                        'topic': situations,
-                        'subtopic': subtopics,
-                    },
+                    'relationship' : relationships
+                    }
+                }
+
+    def bad_json(self):
+
+
+        return {'date': self.date_YMD,
+                "chart":{
                     "badness":{
                         'bad_words': json.loads(self.badwords),
                         "bad_sentences": json.loads(self.bad_sentences)
-                    },
-                    'relationship' : relationships
                     }
+                }
                 }
 
     @classmethod
