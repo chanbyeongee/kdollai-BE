@@ -1,3 +1,6 @@
 [submodule "packages/pue_AI"]
 	path = packages/pue_AI
 	url = https://github.com/PUE-AI-ChatBot/PUE-AI.git
+[submodule "packages/doll_AI"]
+	path = packages/doll_AI
+	url = https://lab.hanium.or.kr/22_HF311/k-doll-ai-chatbot.git

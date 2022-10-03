@@ -20,4 +20,5 @@ numpy
 seqeval
 tqdm
 eventlet
+sentence-transformers
 

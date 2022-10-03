@@ -10,7 +10,9 @@ from pytz import timezone
 import json
 import eventlet
 
-rooms={}
+rooms={
+
+}
 
 class ChatNamespace(Namespace):
     user_type = ""
@@ -62,6 +64,8 @@ class ChatNamespace(Namespace):
 
         if data["type"] == "CHILD" :
             processed_data = main_ai.run("Hello", data['message'])
+
+            """
             stat = StatisticModel.find_by_dateYMD_with_child_id(date=day,child_id=self.child_id)
 
             if not stat :
@@ -69,11 +73,14 @@ class ChatNamespace(Namespace):
                     date_YMD=day,
                     child_id=self.child_id
                 )
+            
+            ChatNamespace.stat_handler(
+                stat=stat,
+                processed_data=processed_data,
+                msg=data["message"]
+            )
+            """
 
-            #stat = ChatNamespace.stat_handler(stat=stat,processed_data=processed_data)
-            #stat.save_to_db()
-
-            print(rooms)
 
             if rooms[self.room]["SUPERVISOR"] :
                 emit(
@@ -85,14 +92,15 @@ class ChatNamespace(Namespace):
             else:
                 day, full_date, real_time = ChatNamespace.time_shift()
 
-                my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", processed_data["System_Corpus"])
+                my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", processed_data["System_Corpus"][6:])
                 my_chat.save_to_db()
 
                 emit(
                     "RECEIVE_MESSAGE",
-                    {"response": processed_data["System_Corpus"],
-                     "day": day, 'time': real_time},
-                    to=rooms[self.room]["CHILD"],
+                    {
+                        "response": processed_data["System_Corpus"][6:],
+                        "day": day, 'time': real_time},
+                        to=rooms[self.room]["CHILD"],
                 )
 
         elif data["type"] == "SUPERVISOR":
@@ -100,14 +108,21 @@ class ChatNamespace(Namespace):
 
             my_chat = ChatModel(self.child_id, day, full_date, real_time, "SUPERVISOR", data['message'])
             my_chat.save_to_db()
-            print("Hello")
-            emit(
-                "RECEIVE_MESSAGE",
-                {"response": data['message'],
-                 "day": day, 'time': real_time},
-                to=rooms[self.room]["CHILD"],
-            )
 
+            if rooms[self.room]["CHILD"]:
+                emit(
+                    "RECEIVE_MESSAGE",
+                    {"response": data['message'],
+                     "day": day, 'time': real_time},
+                    to=rooms[self.room]["CHILD"],
+                )
+            else :
+                emit(
+                    "RECEIVE_MESSAGE",
+                    {"response": "현재 연결된 인형이 없습니다. 인형이 켜져있는 상태인지 확인해보세요.",
+                     "day": day, 'time': real_time},
+                    to=rooms[self.room]["SUPERVISOR"],
+                )
         eventlet.sleep(0)
 
     @staticmethod
@@ -124,7 +139,7 @@ class ChatNamespace(Namespace):
         return day, full_date, real_time
 
     @staticmethod
-    def stat_handler(stat,processed_data,data):
+    def stat_handler(stat,processed_data,msg):
         # emotion handler
         temp_emotion = json.loads(stat.emotions)
         temp_emotion[processed_data['Emotion']] += 1
@@ -137,16 +152,18 @@ class ChatNamespace(Namespace):
             for word in processed_data["Danger_Words"]:
                 temp_badwords[word] += 1
             temp_badsentences = json.loads(stat.bad_sentences)
-            temp_badsentences['sentences'].append(data['message'])
+            temp_badsentences['sentences'].append(msg)
             stat.badwords = json.dumps(temp_badwords)
             stat.bad_sentences = json.dumps(temp_badsentences)
 
-        # situdation handler
+        # situation handler
         temp_topic = json.loads(stat.situation)
-        temp_topic[processed_data["Topic"]] += 1
+        temp_topic[processed_data["Topic"]]["total"] += 1
+        temp_topic[processed_data["Topic"]]["emotion"][processed_data['Emotion']] += 1
         if processed_data["SubTopic"]:
             temp_subtopic = json.loads(stat.subtopic)
-            temp_subtopic[processed_data["SubTopic"]] += 1
+            temp_subtopic[processed_data["SubTopic"]]["total"] += 1
+            temp_subtopic[processed_data["SubTopic"]]["emotion"][processed_data['Emotion']] += 1
             stat.subtopic = json.dumps(temp_subtopic)
         stat.situation = json.dumps(temp_topic)
 
@@ -155,10 +172,9 @@ class ChatNamespace(Namespace):
 
         for key in processed_data["NER"]:
             if key not in temp_relationship.keys():
-                temp_relationship[key] = init_emotion.copy()
-
-            temp_relationship[key][processed_data["Emotion"]] += 1
-
+                temp_relationship[key] = {}
+                temp_relationship[key]["emotion"] = init_emotion.copy()
+            temp_relationship[key]["emotion"][processed_data["Emotion"]] += 1
         stat.relation_ship = json.dumps(temp_relationship)
 
-        return stat
+        stat.save_to_db()
