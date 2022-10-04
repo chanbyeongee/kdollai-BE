@@ -11,3 +11,5 @@
 /packages/doll_AI/resources/weights/NER_weights/
 
 /chatbot
+
+*.pyc

@@ -4,6 +4,8 @@ from models.child import ChildModel
 from models.statistic import StatisticModel, init_emotion, init_topic, init_subtopic, init_badwords, init_badsentences, init_relationship, emotion_weight
 from datetime import datetime,timedelta
 import json
+import operator
+import copy
 
 sentences = {
     "불만" : [
@@ -12,7 +14,8 @@ sentences = {
     ],
     "중립":[
         "{name}이는 최근에 큰 문제는 없었어요.",
-        "하지만 말하지 못하는 마음을 감추고 있을 지도 몰라요. 오늘도 평소처럼 대화를 나눠보시는 건 어떨까요?"
+        "하지만 말하지 못하는 마음을 감추고 있을 지도 몰라요.",
+        "오늘도 평소처럼 대화를 나눠보시는 건 어떨까요?"
     ],
     "당혹":[
         "최근에 {name}이가 놀랄 만한 일이 있었나봐요.",
@@ -45,8 +48,8 @@ sentences = {
 }
 
 
-def summary_emotion(stats):
-    ret_emotions = init_emotion.copy()
+def find_max_emotion(stats):
+    ret_emotions = copy.deepcopy(init_emotion)
     total_cnt = 0
 
     for stat in stats:
@@ -57,22 +60,38 @@ def summary_emotion(stats):
             ret_emotions[key] += temp[key]
 
     max_key = max(ret_emotions,key=ret_emotions.get)
+
     return max_key
+
+def find_three_emotion(stats):
+    ret_emotions = copy.deepcopy(init_emotion)
+    total_cnt = 0
+
+    for stat in stats:
+        temp = json.loads(stat.emotions)
+        total_cnt += stat.total
+
+        for key in ret_emotions.keys():
+            ret_emotions[key] += temp[key]
+
+    sorted_x = sorted(ret_emotions.items(), key=operator.itemgetter(1), reverse=True)
+
+    ret = [content[0] for content in sorted_x[:3]]
+
+    return ret
 
 class RecentWords(Resource):
     def get(self,day):
         child_id = 1
 
-        end = datetime.strptime(day, '%Y%m%d')
-        begin = (end - timedelta(6)).strftime("%Y%m%d")
 
-        stats = StatisticModel.find_range_with_child_id(child_id, begin, day)
+        stats = StatisticModel.find_by_number_with_child_id(child_id,day,7)
         child = ChildModel.find_by_id(child_id)
 
         if not stats:
             return {"message":[f"최근 1주일 간 이용한 기록이 없네요... 저는 {child.name[1:]}이와 더 이야기를 나누고 싶어요!"]}
 
-        emo_key = summary_emotion(stats)
+        emo_key = find_max_emotion(stats)
 
         return {"message":[sentence.format(name=child.name[1:]) for sentence in sentences[emo_key]]}
 
@@ -87,20 +106,63 @@ class RecentUse(Resource):
             recent=chats[-1]
             return {"message":recent.date_YMD}
 
+class RecentEmotions(Resource):
+    def get(self,day):
+        child_id = 1
+
+        stats = StatisticModel.find_by_number_with_child_id(child_id,day,7)
+
+        keys = find_three_emotion(stats)
+
+        return {
+            "message":keys
+        }
+
 class RecentScenario(Resource):
     def get(self,day):
 
-        return {"message":[
-            {
-                "name":"슬픔 관련 대화",
-                "number":2
-            },
-            {
-                "name":"학교/교우/성적 관련 대화",
-                "number":1
-            },
-            {
-                "name": "가족/친척 관련 대화",
-                "number": 4
-            }
-        ]}
+        if day == "20221004":
+            return {"message":[
+                {
+                    "name":"여행/취미 관련 대화",
+                    "number":2
+                },
+                {
+                    "name":"학교/교우/성적 관련 대화",
+                    "number":1
+                },
+                {
+                    "name": "가족/친척 관련 대화",
+                    "number": 4
+                }
+            ]}
+        elif day == "20221003":
+            return {"message": [
+                {
+                    "name": "건강 관련 대화",
+                    "number": 3
+                },
+                {
+                    "name": "반려동물 관련 대화",
+                    "number": 4
+                },
+                {
+                    "name": "스포츠 관련 대화",
+                    "number": 1
+                }
+            ]}
+        else :
+            return {"message": [
+                {
+                    "name": "방송/연예 관련 대화",
+                    "number": 1
+                },
+                {
+                    "name": "영화/방송 관련 대화",
+                    "number": 1
+                },
+                {
+                    "name": "게임",
+                    "number": 1
+                }
+            ]}

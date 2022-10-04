@@ -1,16 +1,14 @@
-from flask_restful import Resource, reqparse
-from models.chat import ChatModel
-from models.child import ChildModel
-from models.statistic import StatisticModel, init_emotion, init_topic, init_subtopic, init_badwords, init_badsentences, init_relationship, emotion_weight
-from datetime import datetime,timedelta
+from flask_restful import Resource
+from models.statistic import StatisticModel, init_badwords, init_badsentences
 import json
+import copy
 
 def summary_badness(stats):
     ret_badwords = init_badwords.copy()
-    ret_badsentences = init_badsentences.copy()
+    ret_badsentences = copy.deepcopy(init_badsentences)
 
     for stat in stats:
-        badwords_temp = json.loads(stat.badwords)
+        badwords_temp = json.loads(stat.badwords).copy()
         badsentences_temp = json.loads(stat.bad_sentences).copy()
 
         for key in ret_badwords.keys():
@@ -26,10 +24,7 @@ class BadNumberStatList(Resource):
 
         child_id = 1
 
-        end = datetime.strptime(date, '%Y%m%d')
-        begin = (end - timedelta(number-1)).strftime("%Y%m%d")
-
-        stats = StatisticModel.find_range_with_child_id(child_id, begin, date)
+        stats = StatisticModel.find_by_number_with_child_id(child_id,date,number)
 
         if not stats :
             return {

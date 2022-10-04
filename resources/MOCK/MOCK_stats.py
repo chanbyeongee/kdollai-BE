@@ -67,11 +67,15 @@ def make_stats(child):
 
     temp = json.loads(stat.relation_ship)
     temp["친구"]={}
+    temp["친구"]["thumbnail"] = "http://image.toast.com/aaaacho/childs/id_1/relations/%EC%B9%9C%EA%B5%AC.png"
     temp["친구"]["emotion"] = init_emotion.copy()
     temp["친구"]["emotion"]["연민"] += 1
+
     temp["강아지"] = {}
+    temp["강아지"]["thumbnail"]="http://image.toast.com/aaaacho/childs/id_1/relations/%EA%B0%95%EC%95%84%EC%A7%80.png"
     temp["강아지"]["emotion"] = init_emotion.copy()
     temp["강아지"]["emotion"]["연민"] += 1
+
     stat.relation_ship = json.dumps(temp)
 
 
@@ -107,9 +111,12 @@ def make_stats(child):
 
     temp = json.loads(stat.relation_ship)
     temp["미영"] = {}
+    temp["미영"]["thumbnail"] = "http://image.toast.com/aaaacho/childs/id_1/relations/%EB%AF%B8%EC%98%81%EC%9D%B4.png"
     temp["미영"]["emotion"] = init_emotion.copy()
     temp["미영"]["emotion"]["걱정"] += 2
+
     temp["반장"] = {}
+    temp["반장"]["thumbnail"] = "http://image.toast.com/aaaacho/childs/id_1/relations/%EB%B0%98%EC%9E%A5.png"
     temp["반장"]["emotion"] = init_emotion.copy()
     temp["반장"]["emotion"]["질투"] += 1
     stat.relation_ship = json.dumps(temp)
@@ -202,9 +209,11 @@ def make_stats(child):
 
     temp = json.loads(stat.relation_ship)
     temp["엄마"]={}
+    temp["엄마"]["thumbnail"] = "http://image.toast.com/aaaacho/childs/id_1/relations/%EC%97%84%EB%A7%88.png"
     temp["엄마"]["emotion"] = init_emotion.copy()
     temp["엄마"]["emotion"]["슬픔"] += 2
     temp["아빠"] = {}
+    temp["아빠"]["thumbnail"] = "http://image.toast.com/aaaacho/childs/id_1/relations/%EC%95%84%EB%B9%A0.png"
     temp["아빠"]["emotion"] = init_emotion.copy()
     temp["아빠"]["emotion"]["슬픔"] += 2
     stat.relation_ship = json.dumps(temp)

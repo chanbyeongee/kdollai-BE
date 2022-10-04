@@ -11,7 +11,7 @@ def create_api(api):
     from .stat_bad import BadRangeStatList, BadAllStatList, BadYMDStatList, BadNumberStatList
     from .stat_relation import RelationRangeStatList, RelationAllStatList, RelationYMDStatList, RelationNumberStatList
     from .stat_topic import TopicRangeStatList, TopicAllStatList, TopicYMDStatList, TopicNumberStatList
-    from .statistic import RecentWords, RecentUse, RecentScenario
+    from .statistic import RecentWords, RecentUse, RecentScenario, RecentEmotions
     from .reservations import GetCounselors, GetPageInfo,MakeReservation,\
         GetUserReservation,GetCounselorReservation, AcceptReservation, RejectReservation,CancleReservation
     from .develop import MakeMock
@@ -33,6 +33,7 @@ def create_api(api):
     # simplestat
     api.add_resource(RecentWords, '/stat/recent/words/today/<string:day>')
     api.add_resource(RecentUse,'/stat/recent/use')
+    api.add_resource(RecentEmotions, '/stat/recent/emotions/<string:day>')
     api.add_resource(RecentScenario, '/stat/recent/scenario/<string:day>')
 
     #emotion

@@ -4,10 +4,11 @@ from models.child import ChildModel
 from models.statistic import StatisticModel, init_emotion, init_topic, init_subtopic, init_badwords, init_badsentences, init_relationship, emotion_weight
 from datetime import datetime,timedelta
 import json
+import copy
 
 def summary_situation(stats):
-    ret_topics = init_topic.copy()
-    ret_subtopics = init_subtopic.copy()
+    ret_topics = copy.deepcopy(init_topic)
+    ret_subtopics = copy.deepcopy(init_subtopic)
 
     for stat in stats:
         topic_temp = json.loads(stat.situation)
@@ -43,10 +44,7 @@ class TopicNumberStatList(Resource):
 
         child_id = 1
 
-        end = datetime.strptime(date, '%Y%m%d')
-        begin = (end - timedelta(number-1)).strftime("%Y%m%d")
-
-        stats = StatisticModel.find_range_with_child_id(child_id, begin, date)
+        stats = StatisticModel.find_by_number_with_child_id(child_id,date,number)
 
         if not stats :
             return {
@@ -82,8 +80,6 @@ class TopicRangeStatList(Resource):
 
 
         topics, sub_topic = summary_situation(stats)
-
-
 
         return {
                    'isSummary': True,
@@ -124,7 +120,6 @@ class TopicAllStatList(Resource):
                 'isSummary': False,
                 "statistics": []
             }
-
 
         topics, sub_topic = summary_situation(stats)
 

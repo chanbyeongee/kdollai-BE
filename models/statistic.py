@@ -37,7 +37,8 @@ init_badsentences={
     "sentences":[]
 }
 
-init_relationship={}
+init_relationship={
+}
 
 
 class StatisticModel(db.Model):
@@ -128,8 +129,6 @@ class StatisticModel(db.Model):
                 }
 
     def bad_json(self):
-
-
         return {'date': self.date_YMD,
                 "chart":{
                     "badness":{
@@ -157,7 +156,7 @@ class StatisticModel(db.Model):
 
     @classmethod
     def find_by_number_with_child_id(cls, child_id, latest, number):
-        return cls.query.filter(and_(cls.date_YMD < latest, cls.child_id == child_id)).order_by(cls.id.desc()).limit(
+        return cls.query.filter(and_(cls.date_YMD <= latest, cls.child_id == child_id)).order_by(cls.id.desc()).limit(
             number).all()
 
     def save_to_db(self):

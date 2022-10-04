@@ -13,6 +13,7 @@ def summary_relationship(stats):
         for key in relationships.keys():
             if not (key in ret_relationship.keys() ):
                 ret_relationship[key]={}
+                ret_relationship[key]["thumbnail"] = relationships[key]["thumbnail"]
                 ret_relationship[key]["emotion"]=init_emotion.copy()
 
             for emotion_key in init_emotion.keys():
@@ -31,10 +32,7 @@ class RelationNumberStatList(Resource):
 
         child_id = 1
 
-        end = datetime.strptime(date, '%Y%m%d')
-        begin = (end - timedelta(number-1)).strftime("%Y%m%d")
-
-        stats = StatisticModel.find_range_with_child_id(child_id, begin, date)
+        stats = StatisticModel.find_by_number_with_child_id(child_id,date,number)
 
         if not stats :
             return {

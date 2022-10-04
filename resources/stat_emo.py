@@ -28,15 +28,13 @@ def summary_emotion(stats):
 
     return total_cnt, ret_emotions.copy(), ret_score
 
+
 class EmotionNumberStatList(Resource):
     def get(self,date, number):
 
         child_id = 1
 
-        end = datetime.strptime(date, '%Y%m%d')
-        begin = (end - timedelta(number-1)).strftime("%Y%m%d")
-
-        stats = StatisticModel.find_range_with_child_id(child_id, begin, date)
+        stats = StatisticModel.find_by_number_with_child_id(child_id,date,number)
 
         if not stats :
             return {

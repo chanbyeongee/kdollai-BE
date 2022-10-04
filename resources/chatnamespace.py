@@ -113,10 +113,9 @@ class ChatNamespace(Namespace):
         elif data["type"] == "SUPERVISOR":
             day, full_date, real_time = ChatNamespace.time_shift()
 
-            my_chat = ChatModel(self.child_id, day, full_date, real_time, "SUPERVISOR", data['message'])
-            my_chat.save_to_db()
-
             if rooms[self.room]["CHILD"]:
+                my_chat = ChatModel(self.child_id, day, full_date, real_time, "SUPERVISOR", data['message'])
+                my_chat.save_to_db()
                 emit(
                     "RECEIVE_MESSAGE",
                     {"response": data['message'],
