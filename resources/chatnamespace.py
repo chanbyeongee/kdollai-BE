@@ -18,9 +18,8 @@ simple_scenarios={
     1:"저런... 많이 힘들었겠다. 부모님은 이 사실에 대해 알고 계시니?",
     2:"부모님은 항상 채민이를 사랑하고 있어. 부모님께 먼저 말을 걸어 보는건 어떠니?",
     3:"그건 부모님이 너무 바쁘셔서 실수하신것 같아... 다시한번 말씀드리면 진지하게 들어주실 거야"
-
 }
-
+counter=0
 class ChatNamespace(Namespace):
     user_type = ""
     room = ""
@@ -56,6 +55,7 @@ class ChatNamespace(Namespace):
         self.child_id = ChildModel.find_by_serial(data['serial_number']).id
 
     def on_SEND_MESSAGE(self,data):
+        global counter
         if not self.child_id :
             emit("RECEIVE_MESSAGE",{"message":"please join with serial_number"})
             return
@@ -105,10 +105,12 @@ class ChatNamespace(Namespace):
                 emit(
                     "RECEIVE_MESSAGE",
                     {
-                        "response": processed_data["System_Corpus"][6:],
+                        "response": simple_scenarios[counter],
                         "day": day, 'time': real_time},
                         to=rooms[self.room]["CHILD"],
                 )
+                counter+=1
+                counter%=4
 
         elif data["type"] == "SUPERVISOR":
             day, full_date, real_time = ChatNamespace.time_shift()
