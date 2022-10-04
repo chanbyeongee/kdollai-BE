@@ -36,19 +36,20 @@ class ChatNamespace(Namespace):
         if rooms[self.room]["SUPERVISOR"] == request.sid:
             rooms[self.room]["SUPERVISOR"] = None
         else :
-            rooms[self.room]["CHILD"] = None
+            rooms[self.room]["USER"] = None
         #sessioned = session.get()
 
     def on_join(self,data):
+        global counter
         print(f"Join room with usertype: {data['type']} serial_number: {data['serial_number']} sid:{request.sid}")
 
         self.user_type = data['type']
         self.room = data['serial_number']
 
         join_room(request.sid)
-
+        counter=0
         if self.room not in rooms.keys():
-            rooms[self.room] = {"SUPERVISOR":None,"CHILD":None}
+            rooms[self.room] = {"SUPERVISOR":None,"USER":None}
 
         rooms[self.room][self.user_type] = request.sid
 
@@ -69,7 +70,7 @@ class ChatNamespace(Namespace):
         my_chat = ChatModel(self.child_id, day,full_date, real_time, data["type"], data['message'])
         my_chat.save_to_db()
 
-        if data["type"] == "CHILD" :
+        if data["type"] == "USER" :
             processed_data = main_ai.run("Hello", data['message'])
 
             """
@@ -99,15 +100,15 @@ class ChatNamespace(Namespace):
             else:
                 day, full_date, real_time = ChatNamespace.time_shift()
 
-                my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", processed_data["System_Corpus"][6:])
+                my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", simple_scenarios[counter])
                 my_chat.save_to_db()
-                print("")
+
                 emit(
                     "RECEIVE_MESSAGE",
                     {
                         "response": simple_scenarios[counter],
                         "day": day, 'time': real_time},
-                        to=rooms[self.room]["CHILD"],
+                        to=rooms[self.room]["USER"],
                 )
                 counter+=1
                 counter%=4
@@ -115,14 +116,14 @@ class ChatNamespace(Namespace):
         elif data["type"] == "SUPERVISOR":
             day, full_date, real_time = ChatNamespace.time_shift()
 
-            if rooms[self.room]["CHILD"]:
+            if rooms[self.room]["USER"]:
                 my_chat = ChatModel(self.child_id, day, full_date, real_time, "SUPERVISOR", data['message'])
                 my_chat.save_to_db()
                 emit(
                     "RECEIVE_MESSAGE",
                     {"response": data['message'],
                      "day": day, 'time': real_time},
-                    to=rooms[self.room]["CHILD"],
+                    to=rooms[self.room]["USER"],
                 )
             else :
                 emit(
