@@ -67,28 +67,12 @@ class ChatNamespace(Namespace):
         print("DAY: ", day)
         print("TIME: ", real_time)
 
-        my_chat = ChatModel(self.child_id, day,full_date, real_time, data["type"], data['message'])
-        my_chat.save_to_db()
+
 
         if data["type"] == "USER" :
 
-
-            """
-            stat = StatisticModel.find_by_dateYMD_with_child_id(date=day,child_id=self.child_id)
-
-            if not stat :
-                stat = StatisticModel(
-                    date_YMD=day,
-                    child_id=self.child_id
-                )
-            
-            ChatNamespace.stat_handler(
-                stat=stat,
-                processed_data=processed_data,
-                msg=data["message"]
-            )
-            """
-
+            my_chat = ChatModel(self.child_id, day, full_date, real_time, data["type"], data['message'])
+            my_chat.save_to_db()
 
             if rooms[self.room]["SUPERVISOR"] :
                 emit(
@@ -97,6 +81,7 @@ class ChatNamespace(Namespace):
                      "day": day, 'time': real_time},
                     to=rooms[self.room]["SUPERVISOR"],
                 )
+
             else:
                 processed_data = main_ai.run("Hello", data['message'])
                 day, full_date, real_time = ChatNamespace.time_shift()
@@ -133,6 +118,7 @@ class ChatNamespace(Namespace):
                      "day": day, 'time': real_time},
                     to=rooms[self.room]["SUPERVISOR"],
                 )
+
         eventlet.sleep(0)
 
     @staticmethod
