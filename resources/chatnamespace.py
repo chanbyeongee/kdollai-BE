@@ -71,7 +71,7 @@ class ChatNamespace(Namespace):
         my_chat.save_to_db()
 
         if data["type"] == "USER" :
-            processed_data = main_ai.run("Hello", data['message'])
+
 
             """
             stat = StatisticModel.find_by_dateYMD_with_child_id(date=day,child_id=self.child_id)
@@ -98,6 +98,7 @@ class ChatNamespace(Namespace):
                     to=rooms[self.room]["SUPERVISOR"],
                 )
             else:
+                processed_data = main_ai.run("Hello", data['message'])
                 day, full_date, real_time = ChatNamespace.time_shift()
 
                 my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", simple_scenarios[counter])
