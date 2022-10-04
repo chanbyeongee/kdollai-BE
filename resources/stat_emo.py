@@ -1,8 +1,5 @@
-from flask_restful import Resource, reqparse
-from models.chat import ChatModel
-from models.child import ChildModel
-from models.statistic import StatisticModel, init_emotion, init_topic, init_subtopic, init_badwords, init_badsentences, init_relationship, emotion_weight
-from datetime import datetime,timedelta
+from flask_restful import Resource
+from models.statistic import StatisticModel, init_emotion
 import json
 
 def summary_emotion(stats):

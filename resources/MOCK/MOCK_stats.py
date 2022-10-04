@@ -19,8 +19,8 @@ def make_stats(child):
     temp["가족"]["total"] += 2
     temp["가족"]["emotion"]["중립"] += 1
     temp["가족"]["emotion"]["기쁨"] += 1
-    temp["날씨_및_계절"]["total"] += 1
-    temp["날씨_및_계절"]["emotion"]["기쁨"] += 1
+    temp["날씨/계절"]["total"] += 1
+    temp["날씨/계절"]["emotion"]["기쁨"] += 1
     temp["건강"]["total"] += 2
     temp["건강"]["emotion"]["중립"] += 1
     temp["건강"]["emotion"]["기쁨"] += 1
@@ -58,9 +58,9 @@ def make_stats(child):
     temp["식음료"]["total"] += 2
     temp["식음료"]["emotion"]["슬픔"] += 1
     temp["식음료"]["emotion"]["불만"] += 1
-    temp["취미"]["total"] += 2
-    temp["취미"]["emotion"]["슬픔"] += 1
-    temp["취미"]["emotion"]["불만"] += 1
+    temp["게임"]["total"] += 2
+    temp["게임"]["emotion"]["슬픔"] += 1
+    temp["게임"]["emotion"]["불만"] += 1
     temp["반려동물"]["total"] += 1
     temp["반려동물"]["emotion"]["연민"] += 1
     stat.situation = json.dumps(temp)
@@ -101,12 +101,12 @@ def make_stats(child):
     temp["학교"]["total"] += 3
     temp["학교"]["emotion"]["당혹"]+=2
     temp["학교"]["emotion"]["걱정"] += 1
-    temp["취미"]["total"] += 3
-    temp["취미"]["emotion"]["당혹"] += 2
-    temp["취미"]["emotion"]["걱정"] += 1
-    temp["방송_미디어"]["total"] += 3
-    temp["방송_미디어"]["emotion"]["당혹"] += 2
-    temp["방송_미디어"]["emotion"]["걱정"] += 1
+    temp["여행"]["total"] += 3
+    temp["여행"]["emotion"]["당혹"] += 2
+    temp["여행"]["emotion"]["걱정"] += 1
+    temp["방송/연예"]["total"] += 3
+    temp["방송/연예"]["emotion"]["당혹"] += 2
+    temp["방송/연예"]["emotion"]["걱정"] += 1
     stat.situation = json.dumps(temp)
 
     temp = json.loads(stat.relation_ship)
@@ -155,16 +155,13 @@ def make_stats(child):
     temp["식음료"]["total"] += 2
     temp["식음료"]["emotion"]["죄책감"] += 1
     temp["식음료"]["emotion"]["중립"] += 1
-    stat.situation = json.dumps(temp)
-
-    temp = json.loads(stat.subtopic)
-    temp["스포츠"]["total"] += 1
-    temp["스포츠"]["emotion"]["기쁨"] += 1
+    temp["영화/만화"]["total"] += 1
+    temp["영화/만화"]["emotion"]["기쁨"] += 1
     temp["여행"]["total"] += 1
     temp["여행"]["emotion"]["기쁨"] += 1
-    temp["영화_만화"]["total"] += 1
-    temp["영화_만화"]["emotion"]["기쁨"] += 1
-    stat.subtopic = json.dumps(temp)
+    temp["스포츠"]["total"] += 1
+    temp["스포츠"]["emotion"]["기쁨"] += 1
+    stat.situation = json.dumps(temp)
 
     temp = json.loads(stat.badwords)
     temp["존나"] += 1
@@ -196,16 +193,11 @@ def make_stats(child):
     temp["학교"]["emotion"]["불만"]+=2
     temp["가족"]["total"] += 1
     temp["가족"]["emotion"]["슬픔"] += 1
-    temp["취미"]["total"] += 1
-    temp["취미"]["emotion"]["당혹"] += 1
+    temp["방송/연예"]["total"] += 2
+    temp["방송/연예"]["emotion"]["중립"] += 2
+    temp["영화/만화"]["total"] += 1
+    temp["영화/만화"]["emotion"]["중립"] += 1
     stat.situation = json.dumps(temp)
-
-    temp = json.loads(stat.subtopic)
-    temp["방송_연예"]["total"] += 2
-    temp["방송_연예"]["emotion"]["중립"] += 2
-    temp["영화_만화"]["total"] += 1
-    temp["영화_만화"]["emotion"]["중립"] += 1
-    stat.subtopic = json.dumps(temp)
 
     temp = json.loads(stat.relation_ship)
     temp["엄마"]={}

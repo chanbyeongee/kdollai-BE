@@ -11,29 +11,23 @@ emotion_weight={
 }
 
 emotion_color={
-    "중립":"#ADB5DB","기쁨":"#A3C6FF","연민":"#CAB1FF","당혹":"#FF99A0","질투":"#FFDB96","걱정":"#C092E0","불만":"#B5FFBA","죄책감":"#BC98FF","슬픔":"#FFFC9E"
+    "중립":"#ADB5DB","기쁨":"#ffe1d8","연민":"#CAB1FF","당혹":"#FF99A0","질투":"#FFDB96",
+    "걱정":"#C092E0","불만":"#B5FFBA","죄책감":"#BC98FF","슬픔":"#FFFC9E"
 }
 
 init_topic={
-    "취미":{"total":0,"emotion":init_emotion.copy()},
-    "날씨_및_계절":{"total":0,"emotion":init_emotion.copy()},
+    "스포츠":{"total":0,"emotion":init_emotion.copy()},
+    "여행":{"total":0,"emotion":init_emotion.copy()},
+    "게임":{"total":0,"emotion":init_emotion.copy()},
+    "날씨/계절":{"total":0,"emotion":init_emotion.copy()},
     "반려동물":{"total":0,"emotion":init_emotion.copy()},
-    "방송_미디어":{"total":0,"emotion":init_emotion.copy()},
+    "영화/만화":{"total":0,"emotion":init_emotion.copy()},
+    "방송/연예":{"total":0,"emotion":init_emotion.copy()},
     "식음료":{"total":0,"emotion":init_emotion.copy()},
     "학교":{"total":0,"emotion":init_emotion.copy()},
     "가족":{"total":0,"emotion":init_emotion.copy()},
     "건강":{"total":0,"emotion":init_emotion.copy()}
 }
-
-init_subtopic={
-    "스포츠":{"total":0,"emotion":init_emotion.copy()},
-    "여행":{"total":0,"emotion":init_emotion.copy()},
-    "게임":{"total":0,"emotion":init_emotion.copy()},
-    "영화_만화":{"total":0,"emotion":init_emotion.copy()},
-    "방송_연예":{"total":0,"emotion":init_emotion.copy()}
-}
-
-
 
 init_badwords={
     "씨발":0, "개새끼":0, "존나":0, "자살":0
@@ -56,7 +50,6 @@ class StatisticModel(db.Model):
     total = db.Column(db.Integer())
 
     situation = db.Column(db.String(80))
-    subtopic = db.Column(db.String(80))
 
     badwords = db.Column(db.String(80))
     bad_sentences = db.Column(db.String(200))
@@ -72,7 +65,6 @@ class StatisticModel(db.Model):
         self.total = 0
 
         self.situation = json.dumps(init_topic)
-        self.subtopic = json.dumps(init_subtopic)
 
         self.badwords = json.dumps(init_badwords)
         self.bad_sentences = json.dumps(init_badsentences)
@@ -102,20 +94,11 @@ class StatisticModel(db.Model):
             for emo_key in init_emotion.keys():
                 situations[key]["score"] += situations[key]["emotion"][emo_key] * emotion_weight[emo_key]
 
-        subtopics = json.loads(self.subtopic)
-
-        for key in subtopics.keys():
-            subtopics[key]["score"] = 50
-            for emo_key in init_emotion.keys():
-                subtopics[key]["score"] += subtopics[key]["emotion"][emo_key] * emotion_weight[emo_key]
-
-
         return {
             'date': self.date_YMD,
                 "chart":{
                     'situation':{
-                        'topic': situations,
-                        'subtopic': subtopics,
+                        'topic': situations
                     },
                 }
             }

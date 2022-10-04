@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from models.chat import ChatModel
 from models.child import ChildModel
 from models.statistic import StatisticModel, init_emotion, emotion_color

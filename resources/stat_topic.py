@@ -1,29 +1,19 @@
-from flask_restful import Resource, reqparse
-from models.chat import ChatModel
-from models.child import ChildModel
-from models.statistic import StatisticModel, init_emotion, init_topic, init_subtopic, init_badwords, init_badsentences, init_relationship, emotion_weight
-from datetime import datetime,timedelta
+from flask_restful import Resource
+from models.statistic import StatisticModel, init_emotion, init_topic, emotion_weight
 import json
 import copy
 
 def summary_situation(stats):
     ret_topics = copy.deepcopy(init_topic)
-    ret_subtopics = copy.deepcopy(init_subtopic)
 
     for stat in stats:
         topic_temp = json.loads(stat.situation)
-        sub_temp = json.loads(stat.subtopic)
+
         for key in ret_topics.keys():
             ret_topics[key]["total"] += topic_temp[key]["total"]
 
             for emo_key in init_emotion.keys():
                 ret_topics[key]["emotion"][emo_key] += topic_temp[key]["emotion"][emo_key]
-
-        for key in ret_subtopics.keys():
-            ret_subtopics[key]["total"] += sub_temp[key]["total"]
-
-            for emo_key in init_emotion.keys():
-                ret_subtopics[key]["emotion"][emo_key] += sub_temp[key]["emotion"][emo_key]
 
     for key in ret_topics.keys():
         temp_sum=50
@@ -31,13 +21,7 @@ def summary_situation(stats):
             temp_sum += ret_topics[key]["emotion"][emo_key]*emotion_weight[emo_key]
         ret_topics[key]["score"]=temp_sum
 
-    for key in ret_subtopics.keys():
-        temp_sum=50
-        for emo_key in init_emotion.keys():
-            temp_sum += ret_subtopics[key]["emotion"][emo_key]*emotion_weight[emo_key]
-        ret_subtopics[key]["score"]=temp_sum
-
-    return ret_topics.copy(), ret_subtopics.copy()
+    return ret_topics.copy()
 
 class TopicNumberStatList(Resource):
     def get(self,date, number):
@@ -52,14 +36,13 @@ class TopicNumberStatList(Resource):
                 "statistics" : []
                }
 
-        topics, sub_topic = summary_situation(stats)
+        topics = summary_situation(stats)
 
         return {
                 'isSummary':True,
                    'summary':{
                        'situation':{
-                           'topic':topics,
-                           'subtopic':sub_topic
+                           'topic':topics
                        }
                     },
                     "statistics" : [stat.topic_json() for stat in stats]
@@ -78,15 +61,13 @@ class TopicRangeStatList(Resource):
                 "statistics": []
             }
 
-
-        topics, sub_topic = summary_situation(stats)
+        topics = summary_situation(stats)
 
         return {
                    'isSummary': True,
                    'summary': {
                        'situation': {
-                           'topic': topics,
-                           'subtopic': sub_topic
+                           'topic': topics
                        }
                    },
                    "statistics" : [stat.topic_json() for stat in stats]
@@ -121,14 +102,13 @@ class TopicAllStatList(Resource):
                 "statistics": []
             }
 
-        topics, sub_topic = summary_situation(stats)
+        topics = summary_situation(stats)
 
         return {
                    'isSummary': True,
                    'summary': {
                        'situation': {
-                           'topic': topics,
-                           'subtopic': sub_topic
+                           'topic': topics
                        }
                    },
                    "statistics" : [stat.topic_json() for stat in stats]
