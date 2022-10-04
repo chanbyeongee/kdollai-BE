@@ -1,8 +1,7 @@
 from flask_restful import Resource, reqparse
 from models.chat import ChatModel
 from models.child import ChildModel
-from models.statistic import StatisticModel, init_emotion, init_topic, init_subtopic, init_badwords, init_badsentences, init_relationship, emotion_weight
-from datetime import datetime,timedelta
+from models.statistic import StatisticModel, init_emotion, emotion_color
 import json
 import operator
 import copy
@@ -46,6 +45,7 @@ sentences = {
         "따듯한 마음을 가진 아이가 올바르게 성장할 수 있게 격려해주세요."
     ]
 }
+
 
 
 def find_max_emotion(stats):
@@ -115,7 +115,7 @@ class RecentEmotions(Resource):
         keys = find_three_emotion(stats)
 
         return {
-            "message":keys
+            "message":[{"name":key,"color":emotion_color[key]} for key in keys]
         }
 
 class RecentScenario(Resource):

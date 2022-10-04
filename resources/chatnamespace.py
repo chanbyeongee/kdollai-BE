@@ -12,14 +12,17 @@ import eventlet
 
 rooms={
 }
-
+##임시방편 시나리오
 simple_scenarios={
     0:"정말? 무슨일 있었어?",
     1:"저런... 많이 힘들었겠다. 부모님은 이 사실에 대해 알고 계시니?",
-    2:"부모님은 항상 채민이를 사랑하고 있어. 부모님께 먼저 말을 걸어 보는건 어떠니?",
+    2:"부모님은 항상 재하를 사랑하고 있어. 부모님께 먼저 말을 걸어 보는건 어떠니?",
     3:"그건 부모님이 너무 바쁘셔서 실수하신것 같아... 다시한번 말씀드리면 진지하게 들어주실 거야"
 }
+
+#몇번째 시나리오 갈지
 counter=0
+
 class ChatNamespace(Namespace):
     user_type = ""
     room = ""
@@ -57,6 +60,7 @@ class ChatNamespace(Namespace):
 
     def on_SEND_MESSAGE(self,data):
         global counter
+
         if not self.child_id :
             emit("RECEIVE_MESSAGE",{"message":"please join with serial_number"})
             return
@@ -66,8 +70,6 @@ class ChatNamespace(Namespace):
         print(data)
         print("DAY: ", day)
         print("TIME: ", real_time)
-
-
 
         if data["type"] == "USER" :
 
@@ -172,5 +174,4 @@ class ChatNamespace(Namespace):
                 temp_relationship[key]["emotion"] = init_emotion.copy()
             temp_relationship[key]["emotion"][processed_data["Emotion"]] += 1
         stat.relation_ship = json.dumps(temp_relationship)
-
         stat.save_to_db()

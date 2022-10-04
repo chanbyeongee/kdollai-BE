@@ -6,6 +6,14 @@ init_emotion={
     "불만":0, "중립":0, "당혹":0, "기쁨":0, "걱정":0, "질투":0, "슬픔":0, "죄책감":0, "연민":0
 }
 
+emotion_weight={
+    "중립":0,"기쁨":3, "연민":-1, "당혹":-1, "질투":-1, "걱정":-1, "불만":-2,"죄책감":-2, "슬픔":-2
+}
+
+emotion_color={
+    "중립":"#ADB5DB","기쁨":"#A3C6FF","연민":"#CAB1FF","당혹":"#FF99A0","질투":"#FFDB96","걱정":"#C092E0","불만":"#B5FFBA","죄책감":"#BC98FF","슬픔":"#FFFC9E"
+}
+
 init_topic={
     "취미":{"total":0,"emotion":init_emotion.copy()},
     "날씨_및_계절":{"total":0,"emotion":init_emotion.copy()},
@@ -25,9 +33,7 @@ init_subtopic={
     "방송_연예":{"total":0,"emotion":init_emotion.copy()}
 }
 
-emotion_weight={
-    "중립":0,"기쁨":3, "연민":-1, "당혹":-1, "질투":-1, "걱정":-1, "불만":-2,"죄책감":-2, "슬픔":-2
-}
+
 
 init_badwords={
     "씨발":0, "개새끼":0, "존나":0, "자살":0
