@@ -29,8 +29,8 @@ def make_dummy():
         user_subname="이경용",
         password="123123",
         breif_desc="서울 한마음 상담 센터",
-        available_begin="0900",
-        available_end="1800"
+        available_begin="09:00",
+        available_end="18:00"
     )
     counselor.profile = "http://image.toast.com/aaaacho/counselors/1.jpg"
     counselor.save_to_db()
@@ -43,8 +43,8 @@ def make_dummy():
         user_subname="김형석",
         password="123123",
         breif_desc="분당 친구 상담 센터",
-        available_begin="0900",
-        available_end="1800"
+        available_begin="09:00",
+        available_end="18:00"
     )
     counselor.profile = "http://image.toast.com/aaaacho/counselors/2.jpg"
     counselor.save_to_db()
@@ -57,8 +57,8 @@ def make_dummy():
         user_subname="최은진",
         password="123123",
         breif_desc="구름 나라 정신 병원",
-        available_begin="0900",
-        available_end="1800"
+        available_begin="09:00",
+        available_end="18:00"
     )
     counselor.profile = "http://image.toast.com/aaaacho/counselors/3.jpg"
     counselor.save_to_db()
@@ -71,8 +71,8 @@ def make_dummy():
         user_subname="정경미",
         password="123123",
         breif_desc="해바라기 테라피 의원",
-        available_begin="1100",
-        available_end="1800"
+        available_begin="11:00",
+        available_end="18:00"
     )
     counselor.profile = "http://image.toast.com/aaaacho/counselors/4.jpg"
     counselor.save_to_db()
@@ -84,8 +84,8 @@ def make_dummy():
         user_subname="이고은",
         password="123123",
         breif_desc="수원 키즈 전문 상담 카페",
-        available_begin="0900",
-        available_end="2000"
+        available_begin="09:00",
+        available_end="20:00"
     )
     counselor.profile = "http://image.toast.com/aaaacho/counselors/5.jpg"
     counselor.save_to_db()
@@ -97,8 +97,8 @@ def make_dummy():
         user_subname="김찬정",
         password="123123",
         breif_desc="인천 헬로스마일 상담 센터",
-        available_begin="1100",
-        available_end="2000"
+        available_begin="11:00",
+        available_end="20:00"
     )
     counselor.profile = "http://image.toast.com/aaaacho/counselors/6.jpg"
     counselor.save_to_db()
@@ -110,8 +110,8 @@ def make_dummy():
         user_subname="노지선",
         password="123123",
         breif_desc="우리동네 아이 상담소",
-        available_begin="1000",
-        available_end="1800"
+        available_begin="10:00",
+        available_end="18:00"
     )
     counselor.profile = "http://image.toast.com/aaaacho/counselors/7.jpg"
     counselor.save_to_db()
@@ -123,8 +123,8 @@ def make_dummy():
         user_subname="장지윤",
         password="123123",
         breif_desc="한빛 마음 테라피",
-        available_begin="0900",
-        available_end="2300"
+        available_begin="09:00",
+        available_end="23:00"
     )
     counselor.profile = "http://image.toast.com/aaaacho/counselors/8.jpg"
     counselor.save_to_db()
@@ -136,8 +136,8 @@ def make_dummy():
         user_subname="차유미",
         password="123123",
         breif_desc="차유미 상담 센터",
-        available_begin="0700",
-        available_end="1800"
+        available_begin="07:00",
+        available_end="18:00"
     )
     counselor.profile = "http://image.toast.com/aaaacho/counselors/9.jpg"
     counselor.save_to_db()
@@ -158,7 +158,7 @@ def make_page(counselors):
 다양한 프로그램을 운영하는 종합상담센터
 개인과 가족 그리고 사회가 행복하고 밝아지도록 노력하는 센터""",
         main_image="http://image.toast.com/aaaacho/pages/1.jpg",
-        lunch_time="1200",
+        lunch_time="12:00",
         address="서울특별시 강남구 역삼동 717 한국은행 빌딩 7층 103호",
         post_address="테헤란로 202 (우) 06220",
         latitude="37.500519881040184",
@@ -182,7 +182,7 @@ def make_page(counselors):
         24시간 전화 상담 가능
         """,
         main_image="http://image.toast.com/aaaacho/pages/2.jpg",
-        lunch_time="1230",
+        lunch_time="12:30",
         address="경기도 성남시 중원구 성남동 3453 2층 203호",
         post_address="성남대로1148번길 8",
         latitude="37.43240510000002",
@@ -206,7 +206,7 @@ def make_page(counselors):
         직접 방문시 등촌역 3번출구로 나오셔서 왼쪽으로 쭉 오세요!
         """,
         main_image="http://image.toast.com/aaaacho/pages/3.jpg",
-        lunch_time="1200",
+        lunch_time="12:00",
         address="서울 강서구 염창동 272-8 3층 315호",
         post_address="공항대로65길 1-5",
         latitude="37.550396799999824",
@@ -230,7 +230,7 @@ def make_page(counselors):
          국내 유일 24시간 콜 서비스 제공 
          """,
         main_image="http://image.toast.com/aaaacho/pages/4.jpg",
-        lunch_time="1300",
+        lunch_time="13:00",
         address="서울특별시 송파구 문정동 11-13 2층",
         post_address="송이로32길 6 (우) 05796",
         latitude="37.48947490000017",
@@ -254,7 +254,7 @@ def make_page(counselors):
         한국상담심리학회의 공인을 받은 상담사만으로 구성되어 있습니다.
         """,
         main_image="http://image.toast.com/aaaacho/pages/5.jpg",
-        lunch_time="1230",
+        lunch_time="12:30",
         address="경기도 성남시 수정구 창곡동 551-11 3층 안내데스크",
         post_address="위례서일로3길 3-8 (우) 13647",
         latitude="37.46582849999996",
@@ -279,7 +279,7 @@ def make_page(counselors):
         연중무휴 야간 심리상담 진행
         """,
         main_image="http://image.toast.com/aaaacho/pages/6.jpg",
-        lunch_time="1210",
+        lunch_time="12:10",
         address="서울특별시 노원구 상계동 725 6층",
         post_address="동일로218길 25 (우) 01751",
         latitude="37.6539928000002",
@@ -304,7 +304,7 @@ def make_page(counselors):
         연령별 다양한 혜택 및 상담 제공 중
         """,
         main_image="http://image.toast.com/aaaacho/pages/7.jpg",
-        lunch_time="1200",
+        lunch_time="12:00",
         address="서울특별시 용산구 갈월동 69-27 202호",
         post_address="한강대로 305 (우) 04320",
         latitude="37.54556499999999",
@@ -328,7 +328,7 @@ def make_page(counselors):
         인천광역시 아동복지 협회와 협력 중입니다.
         """,
         main_image="http://image.toast.com/aaaacho/pages/8.jpg",
-        lunch_time="1200",
+        lunch_time="12:00",
         address="인천광역시 미추홀구 학익동 691-1 415호",
         post_address="한나루로 358 (우) 22225",
         latitude="37.43998689999977",
@@ -352,7 +352,7 @@ def make_page(counselors):
         치료가 끝나도 체계적인 사후 관리를 통해 재발을 방지합니다.
         """,
         main_image="http://image.toast.com/aaaacho/pages/9.jpg",
-        lunch_time="1300",
+        lunch_time="13:00",
         address="서울특별시 동대문구 이문동 324-21 301호",
         post_address="이문로 81 (우) 02451",
         latitude="37.594424699999585",
