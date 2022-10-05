@@ -36,13 +36,6 @@ def make_stats(child):
     temp["강아지"]["topic"]["학교"] += 2
     stat.relation_ship = json.dumps(temp)
 
-    temp = json.loads(stat.badwords)
-    temp["자살"] += 1
-    stat.badwords = json.dumps(temp)
-
-    temp = json.loads(stat.bad_sentences)
-    temp["sentences"].append("내가 좋아하는 아이돌이 자살했대...")
-    stat.bad_sentences = json.dumps(temp)
 
     stat.save_to_db()
 
@@ -343,5 +336,56 @@ def make_stats(child):
     temp["sentences"].append("씨발! 오늘 시험 망쳤어!")
     stat.bad_sentences = json.dumps(temp)
 
+
+    stat.save_to_db()
+
+    stat = StatisticModel(
+        date_YMD="20221005",
+        child_id=child.id
+    )
+    temp = json.loads(stat.emotions)
+    temp["죄책감"] += 1
+    temp["기쁨"] += 2
+    temp["중립"] += 3
+    temp["걱정"] += 1
+    stat.emotion_score += emotion_weight["죄책감"]
+    stat.emotion_score += emotion_weight["기쁨"]
+    stat.emotion_score += emotion_weight["걱정"]
+    stat.emotions = json.dumps(temp)
+    stat.total += 7
+
+    temp = json.loads(stat.situation)
+    temp["건강"]["total"] += 1
+    temp["건강"]["emotion"]["불만"] += 1
+    temp["학교"]["total"] += 2
+    temp["학교"]["emotion"]["불만"] += 1
+    temp["학교"]["emotion"]["걱정"] += 1
+    temp["식음료"]["total"] += 2
+    temp["식음료"]["emotion"]["죄책감"] += 1
+    temp["식음료"]["emotion"]["중립"] += 1
+    temp["영화/만화"]["total"] += 1
+    temp["영화/만화"]["emotion"]["기쁨"] += 1
+    temp["여행"]["total"] += 1
+    temp["여행"]["emotion"]["기쁨"] += 1
+    temp["스포츠"]["total"] += 1
+    temp["스포츠"]["emotion"]["기쁨"] += 1
+    stat.situation = json.dumps(temp)
+
+    temp = json.loads(stat.badwords)
+    temp["존나"] += 1
+    stat.badwords = json.dumps(temp)
+
+    temp = json.loads(stat.relation_ship)
+    temp["친구"] = {}
+    temp["친구"]["thumbnail"] = "http://image.toast.com/aaaacho/childs/id_1/relations/%EC%B9%9C%EA%B5%AC.png"
+    temp["친구"]["emotion"] = init_emotion.copy()
+    temp["친구"]["topic"] = topic_dict.copy()
+    temp["친구"]["emotion"]["중립"] += 1
+    temp["친구"]["topic"]["영화/만화"] += 2
+    stat.relation_ship = json.dumps(temp)
+
+    temp = json.loads(stat.bad_sentences)
+    temp["sentences"].append("존나 싫어!")
+    stat.bad_sentences = json.dumps(temp)
 
     stat.save_to_db()

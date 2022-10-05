@@ -37,7 +37,7 @@ def make_chats(child):
     chat = ChatModel(
         child_id=child.id,
         date_YMD="20221003",
-        date_YMDHMS="20220917175350",
+        date_YMDHMS="20221003175350",
         date_Time="오후 5:53",
         direction="BOT",
         utterance="정말? 좋은 일이네! 축하해!"
@@ -244,5 +244,126 @@ def make_chats(child):
         date_Time="오후 1:13",
         direction="BOT",
         utterance="그래! 나중에 편안할때 말해줘!"
+    )
+    chat.save_to_db()
+
+    # 10.05일
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175322",
+        date_Time="오후 5:53",
+        direction="USER",
+        utterance="안녕 도담아!"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175330",
+        date_Time="오후 5:53",
+        direction="BOT",
+        utterance="오랜만이야 동현아!"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175340",
+        date_Time="오후 5:53",
+        direction="USER",
+        utterance="오늘 저번에 싸운 친구와 화해했어!"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175350",
+        date_Time="오후 5:53",
+        direction="BOT",
+        utterance="정말? 좋은 일이네! 축하해!"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175403",
+        date_Time="오후 5:54",
+        direction="USER",
+        utterance="너 덕분이야! 고마워!"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175415",
+        date_Time="오후 5:54",
+        direction="BOT",
+        utterance="그렇게 말해줘서 내가 더 고마운걸?"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175430",
+        date_Time="오후 5:54",
+        direction="USER",
+        utterance="그건 그렇고 나는 부모님이랑 저녁 외식을 갈것같아"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175445",
+        date_Time="오후 5:54",
+        direction="BOT",
+        utterance="부모님과 시간을 보내는구나? 좋은 시간 보냈으면 좋겠어"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175502",
+        date_Time="오후 5:55",
+        direction="USER",
+        utterance="그럼 나 갔다올게"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175510",
+        date_Time="오후 5:55",
+        direction="BOT",
+        utterance="일찍 오는거야?"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175525",
+        date_Time="오후 5:55",
+        direction="USER",
+        utterance="좀 있다 올것 같아.. 있다가 봐!"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221005",
+        date_YMDHMS="20221005175532",
+        date_Time="오후 5:55",
+        direction="BOT",
+        utterance="그래! 이따 봐"
     )
     chat.save_to_db()
