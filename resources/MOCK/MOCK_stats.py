@@ -3,7 +3,48 @@ from models.statistic import emotion_weight, init_emotion, topic_dict
 import json
 
 def make_stats(child):
+    stat = StatisticModel(
+        date_YMD="20220928",
+        child_id=child.id
+    )
+    temp = json.loads(stat.emotions)
+    temp["중립"] += 3
+    temp["불만"] += 1
+    temp["연민"] += 2
+    temp["질투"] += 1
+    stat.emotion_score += emotion_weight["불만"]
+    stat.emotion_score += emotion_weight["연민"] * 2
+    stat.emotion_score += emotion_weight["질투"]
+    stat.emotions = json.dumps(temp)
+    stat.total += 7
 
+    temp = json.loads(stat.situation)
+    temp["식음료"]["total"] += 2
+    temp["식음료"]["emotion"]["중립"] += 2
+    temp["건강"]["total"] += 1
+    temp["건강"]["emotion"]["불만"] +=1
+    temp["학교"]["total"] += 2
+    temp["학교"]["emotion"]["질투"] += 2
+    stat.situation = json.dumps(temp)
+
+    temp = json.loads(stat.relation_ship)
+    temp["강아지"] = {}
+    temp["강아지"]["thumbnail"] = "http://image.toast.com/aaaacho/childs/id_1/relations/%EA%B0%95%EC%95%84%EC%A7%80.png"
+    temp["강아지"]["emotion"] = init_emotion.copy()
+    temp["강아지"]["topic"] = topic_dict.copy()
+    temp["강아지"]["emotion"]["연민"] += 2
+    temp["강아지"]["topic"]["학교"] += 2
+    stat.relation_ship = json.dumps(temp)
+
+    temp = json.loads(stat.badwords)
+    temp["자살"] += 1
+    stat.badwords = json.dumps(temp)
+
+    temp = json.loads(stat.bad_sentences)
+    temp["sentences"].append("내가 좋아하는 아이돌이 자살했대...")
+    stat.bad_sentences = json.dumps(temp)
+
+    stat.save_to_db()
 
     stat = StatisticModel(
         date_YMD="20220929",
@@ -18,7 +59,7 @@ def make_stats(child):
     stat.emotion_score += emotion_weight["죄책감"] * 4
     stat.emotion_score += emotion_weight["당혹"]
     stat.emotions = json.dumps(temp)
-    stat.total += 1
+    stat.total += 10
 
     temp = json.loads(stat.situation)
     temp["게임"]["total"] += 2
