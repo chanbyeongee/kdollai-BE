@@ -12,8 +12,8 @@ emotion_weight={
 }
 
 emotion_color={
-    "중립":"#ADB5DB","기쁨":"#ffe1d8","연민":"#CAB1FF","당혹":"#FF99A0","질투":"#FFDB96",
-    "걱정":"#C092E0","불만":"#B5FFBA","죄책감":"#BC98FF","슬픔":"#FFFC9E"
+    "중립":"#FFE1D8","기쁨":"#FFF5D9","연민":"#D8E2FF","당혹":"#BEE8BA","질투":"#F2D4F7",
+    "걱정":"#C9FAFF","불만":"#ECFCD5","죄책감":"#C9FFEC","슬픔":"#FCB9B9"
 }
 
 init_topic={
