@@ -29,6 +29,20 @@ init_topic={
     "가족":{"total":0,"emotion":init_emotion.copy()},
     "건강":{"total":0,"emotion":init_emotion.copy()}
 }
+topic_dict={
+    "스포츠":0,
+    "여행":0,
+    "게임":0,
+    "날씨/계절":0,
+    "반려동물":0,
+    "영화/만화":0,
+    "방송/연예":0,
+    "식음료":0,
+    "학교":0,
+    "가족":0,
+    "건강":0
+}
+
 
 init_badwords={
     "씨발":0, "개새끼":0, "존나":0, "자살":0
@@ -118,10 +132,9 @@ class StatisticModel(db.Model):
 
             real_ret[key]["score"] = relationships[key]["score"]
 
-            sorted_x = sorted(relationships[key]["emotion"].items(), key=operator.itemgetter(1), reverse=True)
+            sorted_x = sorted(relationships[key]["topic"].items(), key=operator.itemgetter(1), reverse=True)
             temp = [{"name": content[0], "count": content[1]} for content in sorted_x[:3]]
-            real_ret[key]["emotion"] = temp
-
+            real_ret[key]["topic"] = temp
 
         return {'date': self.date_YMD,
                 "chart":{
