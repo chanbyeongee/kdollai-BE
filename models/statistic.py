@@ -1,6 +1,7 @@
 from db import db
 from . import and_
 import json
+import operator
 
 init_emotion={
     "불만":0, "중립":0, "당혹":0, "기쁨":0, "걱정":0, "질투":0, "슬픔":0, "죄책감":0, "연민":0
@@ -106,14 +107,25 @@ class StatisticModel(db.Model):
     def relation_json(self):
 
         relationships = json.loads(self.relation_ship)
+        real_ret={}
         for key in relationships.keys():
+            real_ret[key]={}
+
+            real_ret[key]["thumbnail"]=relationships[key]["thumbnail"]
             relationships[key]["score"] = 50
             for emo_key in init_emotion.keys():
                 relationships[key]["score"] += relationships[key]["emotion"][emo_key] * emotion_weight[emo_key]
 
+            real_ret[key]["score"] = relationships[key]["score"]
+
+            sorted_x = sorted(relationships[key]["emotion"].items(), key=operator.itemgetter(1), reverse=True)
+            temp = [{"name": content[0], "count": content[1]} for content in sorted_x[:3]]
+            real_ret[key]["emotion"] = temp
+
+
         return {'date': self.date_YMD,
                 "chart":{
-                    'relationship' : relationships
+                    'relationship' : real_ret
                     }
                 }
 
