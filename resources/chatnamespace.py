@@ -120,6 +120,19 @@ class ChatNamespace(Namespace):
                      "day": day, 'time': real_time},
                     to=rooms[self.room]["SUPERVISOR"],
                 )
+        elif data["type"] == "BOT":
+
+            my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", data["message"])
+            my_chat.save_to_db()
+
+            emit(
+                "RECEIVE_MESSAGE",
+                {
+                    "response": data["message"],
+                    "day": day, 'time': real_time},
+                to=rooms[self.room]["SUPERVISOR"],
+            )
+
 
         eventlet.sleep(0)
 
