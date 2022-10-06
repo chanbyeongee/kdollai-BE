@@ -11,10 +11,10 @@
 ## 💻 Developers
 <div align="center">
     <table border="1">
-        <th><a href="https://github.com/L2HYUNN">이동현</a></th>
+        <th><a href="https://github.com/ChanByeongee">이병찬</a></th>
         <tr>
             <td>
-                <img src="https://github.com/L2HYUNN.png" width='80' />
+                <img src="https://github.com/ChanByeongee.png" width='80' />
             </td>
         </tr>
     </table>
@@ -23,31 +23,29 @@
 ## 🔨 Environment
 
 ##### Language 
-<img src="https://img.shields.io/badge/Javascript-F7DF1E?style=flat-square&logo=Javascript&logoColor=black">
+<img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54">
 
 
 ##### Library
 
+<img src="https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white">
 
-<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=black">
-
-
-<br/>
-
-<img src="https://img.shields.io/badge/React&nbsp;Query-FF4154?style=flat-square&logo=ReactQuery&logoColor=black">
-<img src="https://img.shields.io/badge/Recoil-3578E5?style=flat-square&logo=Recoil&logoColor=black">
 
 <br/>
 
-<img src="https://img.shields.io/badge/React&nbsp;Router-CA4245?style=flat-square&logo=ReactRouter&logoColor=black">
-<img src="https://img.shields.io/badge/React&nbsp;Hook&nbsp;Form-EC5990?style=flat-square&logo=ReactHookForm&logoColor=black">
+<img src="https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101">
+
+<br/>
+
+<img src="https://img.shields.io/badge/-Flask--RESTful-lightgrey">
+<img src="https://img.shields.io/badge/-Flask--SQLAlchemy-blue">
 
 
 ##### Communication
   <img src="https://img.shields.io/badge/Collabee-bd9419?style=flat-square&logo=collabee&logoColor=white"/> <img src="https://img.shields.io/badge/GitLab-FC6D26?style=flat-square&logo=GitLab&logoColor=white"/>
 
 ##### Deployment
-<img src="https://img.shields.io/badge/Amazon&nbsp;EC2-FF9900?style=flat-square&logo=AmazonEC2&logoColor=black"/>
+<img src="https://img.shields.io/badge/NHN&nbsp;EC2-FF9900?style=flat-square"/>
 
 
 
@@ -56,19 +54,18 @@
 #### Install npm  dependencies
 
 ```bash
-> npm install
-```
-
-#### Set  `.env`
-
-```dotenv
-REACT_APP_NAVER_CLIENT_ID="NAVER_API_ID"
+> pip3 install -r requirements.txt
 ```
 
 #### Start server
 
 ```bash
-> npm start
+> python3 app.py
+>
+>
+> #run with docker
+> docker run -d kdollai python3 -m app.py
+>
 ```
 
 
