@@ -10,8 +10,6 @@ class ChatModel(db.Model):
     date_Time = db.Column(db.String(80))
     direction = db.Column(db.String(80))#0-user #1-chatbot
     utterance = db.Column(db.String(80))
-    emotion = db.Column(db.String(80))
-    situation = db.Column(db.String(80))
 
     child_id = db.Column(db.Integer, db.ForeignKey('childs.id'))
 
