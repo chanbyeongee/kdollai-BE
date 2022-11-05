@@ -12,21 +12,17 @@ import eventlet
 
 rooms={
 }
-##임시방편 시나리오
-simple_scenarios={
-    0:"정말? 무슨일 있었어?",
-    1:"저런... 많이 힘들었겠다. 부모님은 이 사실에 대해 알고 계시니?",
-    2:"부모님은 항상 재하를 사랑하고 있어. 부모님께 먼저 말을 걸어 보는건 어떠니?",
-    3:"그건 부모님이 너무 바쁘셔서 실수하신것 같아... 다시한번 말씀드리면 진지하게 들어주실 거야"
-}
+
 
 #몇번째 시나리오 갈지
-counter=0
+
+
 
 class ChatNamespace(Namespace):
     user_type = ""
     room = ""
     child_id = None
+    flag = False
 
     def on_connect(self):
         print("Client connected")
@@ -38,6 +34,7 @@ class ChatNamespace(Namespace):
         close_room(request.sid)
         if rooms[self.room]["SUPERVISOR"] == request.sid:
             rooms[self.room]["SUPERVISOR"] = None
+            ChatNamespace.flag = False
         else :
             rooms[self.room]["USER"] = None
         #sessioned = session.get()
@@ -77,18 +74,32 @@ class ChatNamespace(Namespace):
             my_chat.save_to_db()
 
             if rooms[self.room]["SUPERVISOR"] :
-                emit(
-                    "RECEIVE_MESSAGE",
-                    {"response": data['message'],
-                     "day": day, 'time': real_time},
-                    to=rooms[self.room]["SUPERVISOR"],
-                )
+                 emit(
+                     "RECEIVE_MESSAGE",
+                     {"response": data['message'],
+                      "day": day, 'time': real_time,
+                     "type":"USER"},
+                     to=rooms[self.room]["SUPERVISOR"],
+                 )
 
-            else:
+            if ChatNamespace.flag:
+                # emit(
+                #     "RECEIVE_MESSAGE",
+                #     {"response": data['message'],
+                #      "day": day, 'time': real_time},
+                #     to=rooms[self.room]["SUPERVISOR"],
+                # )
+                ChatNamespace.flag = False
+
+                eventlet.sleep(15)
+
+            if not ChatNamespace.flag:
                 processed_data = main_ai.run("동현", data['message'])
                 day, full_date, real_time = ChatNamespace.time_shift()
 
-                my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", simple_scenarios[counter])
+                ret = " ".join(processed_data["System_Corpus"])
+
+                my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", ret)
                 my_chat.save_to_db()
 
                 stat = StatisticModel.find_by_dateYMD_with_child_id(self.child_id,day)
@@ -103,13 +114,28 @@ class ChatNamespace(Namespace):
                 emit(
                     "RECEIVE_MESSAGE",
                     {
-                        "response": processed_data["System_Corpus"],
-                        "day": day, 'time': real_time},
+                        "response": ret,
+                        "day": day, 'time': real_time,
+                        "type":"BOT"
+                    },
                         to=rooms[self.room]["USER"],
                 )
 
+                if rooms[self.room]["SUPERVISOR"]:
+                    emit(
+                        "RECEIVE_MESSAGE",
+                        {
+                            "response": ret,
+                             "day": day, 'time': real_time,
+                             "type":"BOT"
+                         },
+                        to=rooms[self.room]["SUPERVISOR"],
+                    )
 
         elif data["type"] == "SUPERVISOR":
+
+            ChatNamespace.flag = True
+
             day, full_date, real_time = ChatNamespace.time_shift()
 
             if rooms[self.room]["USER"]:
@@ -173,15 +199,15 @@ class ChatNamespace(Namespace):
                 temp_topic[processed_data["Topic"]]["emotion"][processed_data['Emotion']] += 1
                 stat.situation = json.dumps(temp_topic)
 
-            # relationship
-            temp_relationship = json.loads(stat.relation_ship)
-
-            for key in processed_data["NER"]:
-                if key not in temp_relationship.keys():
-                    temp_relationship[key] = {}
-                    temp_relationship[key]["emotion"] = init_emotion.copy()
-                temp_relationship[key]["emotion"][processed_data["Emotion"]] += 1
-            stat.relation_ship = json.dumps(temp_relationship)
+            # # relationship
+            # temp_relationship = json.loads(stat.relation_ship)
+            #
+            # for key in processed_data["NER"]:
+            #     if key not in temp_relationship.keys():
+            #         temp_relationship[key] = {}
+            #         temp_relationship[key]["emotion"] = init_emotion.copy()
+            #     temp_relationship[key]["emotion"][processed_data["Emotion"]] += 1
+            # stat.relation_ship = json.dumps(temp_relationship)
 
 
         # badness handler
