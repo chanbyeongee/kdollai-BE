@@ -367,3 +367,4 @@ def make_chats(child):
         utterance="그래! 이따 봐"
     )
     chat.save_to_db()
+

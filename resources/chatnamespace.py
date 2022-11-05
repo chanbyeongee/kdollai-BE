@@ -78,6 +78,7 @@ class ChatNamespace(Namespace):
                      "type":"USER"},
                      to=rooms[self.room]["SUPERVISOR"],
                  )
+                 eventlet.sleep(0)
 
             if ChatNamespace.flag:
                 # emit(
@@ -117,6 +118,7 @@ class ChatNamespace(Namespace):
                     },
                         to=rooms[self.room]["USER"],
                 )
+                eventlet.sleep(0)
 
                 if rooms[self.room]["SUPERVISOR"]:
                     emit(
@@ -128,6 +130,7 @@ class ChatNamespace(Namespace):
                          },
                         to=rooms[self.room]["SUPERVISOR"],
                     )
+                    eventlet.sleep(0)
 
         elif data["type"] == "SUPERVISOR":
 
@@ -144,6 +147,8 @@ class ChatNamespace(Namespace):
                      "day": day, 'time': real_time},
                     to=rooms[self.room]["USER"],
                 )
+                eventlet.sleep(0)
+
             else :
                 emit(
                     "RECEIVE_MESSAGE",
@@ -151,6 +156,8 @@ class ChatNamespace(Namespace):
                      "day": day, 'time': real_time, "type":"USER"},
                     to=rooms[self.room]["SUPERVISOR"],
                 )
+                eventlet.sleep(0)
+
         elif data["type"] == "BOT":
 
             my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", data["message"])
@@ -163,9 +170,10 @@ class ChatNamespace(Namespace):
                     "day": day, 'time': real_time},
                 to=rooms[self.room]["SUPERVISOR"],
             )
+            eventlet.sleep(0)
 
 
-        eventlet.sleep(0)
+
 
     @staticmethod
     def time_shift():
