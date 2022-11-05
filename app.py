@@ -71,6 +71,10 @@ jwt = JWTManager(app) #this will make endpoint named '/auth' (username,password)
 #         "description": "The token has been revoked.",
 #         'error': 'token_revoked'
 #     }), 401
+@app.route('/health')
+def health():
+    return "OK"
+
 create_api(api)
 create_socketio(sock)
 
