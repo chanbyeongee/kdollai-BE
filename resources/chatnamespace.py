@@ -173,6 +173,16 @@ class ChatNamespace(Namespace):
                 temp_topic[processed_data["Topic"]]["emotion"][processed_data['Emotion']] += 1
                 stat.situation = json.dumps(temp_topic)
 
+            # relationship
+            temp_relationship = json.loads(stat.relation_ship)
+
+            for key in processed_data["NER"]:
+                if key not in temp_relationship.keys():
+                    temp_relationship[key] = {}
+                    temp_relationship[key]["emotion"] = init_emotion.copy()
+                temp_relationship[key]["emotion"][processed_data["Emotion"]] += 1
+            stat.relation_ship = json.dumps(temp_relationship)
+
 
         # badness handler
         if processed_data["Danger_Flag"]:
@@ -186,13 +196,5 @@ class ChatNamespace(Namespace):
 
 
 
-        # relationship
-        temp_relationship = json.loads(stat.relation_ship)
 
-        for key in processed_data["NER"]:
-            if key not in temp_relationship.keys():
-                temp_relationship[key] = {}
-                temp_relationship[key]["emotion"] = init_emotion.copy()
-            temp_relationship[key]["emotion"][processed_data["Emotion"]] += 1
-        stat.relation_ship = json.dumps(temp_relationship)
         stat.save_to_db()
