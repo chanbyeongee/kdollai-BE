@@ -20,6 +20,7 @@ class ChatNamespace(Namespace):
     room = ""
     child_id = None
     flag = False
+    timeout = 20
 
     def on_connect(self):
         print("Client connected")
@@ -90,7 +91,7 @@ class ChatNamespace(Namespace):
                 # )
                 ChatNamespace.flag = False
 
-                eventlet.sleep(15)
+                eventlet.sleep(ChatNamespace.timeout)
 
             if not ChatNamespace.flag:
                 processed_data = main_ai.run("동현", data['message'])
