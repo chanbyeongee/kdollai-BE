@@ -12,7 +12,7 @@ from db import db
 #db_name = config['DEFAULT']['DB_NAME']+'.db'
 
 host = "0.0.0.0"
-port = 80
+port = 5000
 
 SECRET_KEY = "chan"
 db_name="chatbot"

@@ -13,10 +13,7 @@ import eventlet
 rooms={
 }
 
-
 #몇번째 시나리오 갈지
-
-
 
 class ChatNamespace(Namespace):
     user_type = ""
@@ -151,7 +148,7 @@ class ChatNamespace(Namespace):
                 emit(
                     "RECEIVE_MESSAGE",
                     {"response": "현재 연결된 인형이 없습니다. 인형이 켜져있는 상태인지 확인해보세요.",
-                     "day": day, 'time': real_time},
+                     "day": day, 'time': real_time, "type":"USER"},
                     to=rooms[self.room]["SUPERVISOR"],
                 )
         elif data["type"] == "BOT":
@@ -179,7 +176,7 @@ class ChatNamespace(Namespace):
         ampm = now.strftime('%p')
         ampm_kr = '오전' if ampm == 'AM' else '오후'
 
-        real_time = f"{ampm_kr} {now.strftime('%#H:%M')}"
+        real_time = f"{ampm_kr} {now.strftime('%#I:%M')}"
 
         return day, full_date, real_time
 
