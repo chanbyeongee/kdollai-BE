@@ -23,6 +23,7 @@ class ChatNamespace(Namespace):
 
     def on_connect(self):
         print("Client connected")
+        main_ai.set_init()
         #sessioned= session.get()
 
     def on_disconnect(self):
