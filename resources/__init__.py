@@ -1,7 +1,6 @@
 from packages.doll_AI.aimodel import AIModel
 
 main_ai = AIModel()
-main_ai.model_loader()
 
 def create_api(api):
     from .user import UserRegister, User, UserLogin

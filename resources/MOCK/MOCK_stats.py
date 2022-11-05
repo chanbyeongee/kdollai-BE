@@ -4,7 +4,7 @@ import json
 
 def make_stats(child):
     stat = StatisticModel(
-        date_YMD="20220928",
+        date_YMD="20221030",
         child_id=child.id
     )
     temp = json.loads(stat.emotions)
@@ -40,7 +40,7 @@ def make_stats(child):
     stat.save_to_db()
 
     stat = StatisticModel(
-        date_YMD="20220929",
+        date_YMD="20221031",
         child_id=child.id
     )
     temp = json.loads(stat.emotions)
@@ -84,7 +84,7 @@ def make_stats(child):
 
 
     stat = StatisticModel(
-        date_YMD="20220930",
+        date_YMD="20221101",
         child_id=child.id
     )
     temp = json.loads(stat.emotions)
@@ -126,7 +126,7 @@ def make_stats(child):
     stat.save_to_db()
 
     stat = StatisticModel(
-        date_YMD="20221001",
+        date_YMD="20221102",
         child_id=child.id
     )
 
@@ -176,7 +176,7 @@ def make_stats(child):
     stat.save_to_db()
 
     stat = StatisticModel(
-        date_YMD="20221002",
+        date_YMD="20221103",
         child_id=child.id
     )
     temp = json.loads(stat.emotions)
@@ -230,7 +230,7 @@ def make_stats(child):
     stat.save_to_db()
 
     stat = StatisticModel(
-        date_YMD="20221003",
+        date_YMD="20221104",
         child_id=child.id
     )
     temp = json.loads(stat.emotions)
@@ -281,7 +281,7 @@ def make_stats(child):
     stat.save_to_db()
 
     stat = StatisticModel(
-        date_YMD="20221004",
+        date_YMD="20221105",
         child_id=child.id
     )
     temp = json.loads(stat.emotions)
@@ -340,7 +340,7 @@ def make_stats(child):
     stat.save_to_db()
 
     stat = StatisticModel(
-        date_YMD="20221005",
+        date_YMD="20221106",
         child_id=child.id
     )
     temp = json.loads(stat.emotions)

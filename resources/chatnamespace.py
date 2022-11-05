@@ -74,8 +74,8 @@ class ChatNamespace(Namespace):
                  emit(
                      "RECEIVE_MESSAGE",
                      {"response": data['message'],
-                      "day": day, 'time': real_time,
-                     "type":"USER"},
+                      "day": day, 'time': real_time, "type":"USER"
+                      },
                      to=rooms[self.room]["SUPERVISOR"],
                  )
                  eventlet.sleep(0)
@@ -93,6 +93,7 @@ class ChatNamespace(Namespace):
 
             if not ChatNamespace.flag:
                 processed_data = main_ai.run("동현", data['message'])
+                print(processed_data)
                 day, full_date, real_time = ChatNamespace.time_shift()
 
                 ret = " ".join(processed_data["System_Corpus"])
