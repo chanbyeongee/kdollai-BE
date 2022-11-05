@@ -85,21 +85,29 @@ class ChatNamespace(Namespace):
                 )
 
             else:
-                processed_data = main_ai.run("Hello", data['message'])
+                processed_data = main_ai.run("동현", data['message'])
                 day, full_date, real_time = ChatNamespace.time_shift()
 
                 my_chat = ChatModel(self.child_id, day, full_date, real_time, "BOT", simple_scenarios[counter])
                 my_chat.save_to_db()
 
+                stat = StatisticModel.find_by_dateYMD_with_child_id(self.child_id,day)
+                if not stat :
+                    stat = StatisticModel(
+                        day,
+                        self.child_id
+                    )
+
+                ChatNamespace.stat_handler(stat,processed_data,data['message'])
+
                 emit(
                     "RECEIVE_MESSAGE",
                     {
-                        "response": simple_scenarios[counter],
+                        "response": processed_data["System_Corpus"],
                         "day": day, 'time': real_time},
                         to=rooms[self.room]["USER"],
                 )
-                counter+=1
-                counter%=4
+
 
         elif data["type"] == "SUPERVISOR":
             day, full_date, real_time = ChatNamespace.time_shift()
@@ -152,10 +160,19 @@ class ChatNamespace(Namespace):
     @staticmethod
     def stat_handler(stat,processed_data,msg):
         # emotion handler
-        temp_emotion = json.loads(stat.emotions)
-        temp_emotion[processed_data['Emotion']] += 1
-        stat.emotions = json.dumps(temp_emotion)
-        stat.emotion_score += emotion_weight[processed_data['Emotion']]
+        if processed_data["Emotion"]:
+            temp_emotion = json.loads(stat.emotions)
+            temp_emotion[processed_data['Emotion']] += 1
+            stat.emotions = json.dumps(temp_emotion)
+            stat.emotion_score += emotion_weight[processed_data['Emotion']]
+
+            # situation handler
+            if processed_data["Topic"]:
+                temp_topic = json.loads(stat.situation)
+                temp_topic[processed_data["Topic"]]["total"] += 1
+                temp_topic[processed_data["Topic"]]["emotion"][processed_data['Emotion']] += 1
+                stat.situation = json.dumps(temp_topic)
+
 
         # badness handler
         if processed_data["Danger_Flag"]:
@@ -167,16 +184,7 @@ class ChatNamespace(Namespace):
             stat.badwords = json.dumps(temp_badwords)
             stat.bad_sentences = json.dumps(temp_badsentences)
 
-        # situation handler
-        temp_topic = json.loads(stat.situation)
-        temp_topic[processed_data["Topic"]]["total"] += 1
-        temp_topic[processed_data["Topic"]]["emotion"][processed_data['Emotion']] += 1
-        if processed_data["SubTopic"]:
-            temp_subtopic = json.loads(stat.subtopic)
-            temp_subtopic[processed_data["SubTopic"]]["total"] += 1
-            temp_subtopic[processed_data["SubTopic"]]["emotion"][processed_data['Emotion']] += 1
-            stat.subtopic = json.dumps(temp_subtopic)
-        stat.situation = json.dumps(temp_topic)
+
 
         # relationship
         temp_relationship = json.loads(stat.relation_ship)
