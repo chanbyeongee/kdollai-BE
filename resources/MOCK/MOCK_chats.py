@@ -425,7 +425,7 @@ def make_chats(child):
         date_YMDHMS="20221105210230",
         date_Time="오후 9:02",
         direction="BOT",
-        utterance="그렇구나... 부모님이 자주 싸우시니?"
+        utterance="그럼 동현이는 부모님이 싸우는 걸 보면 어떤 생각이 들어?"
     )
     chat.save_to_db()
 
