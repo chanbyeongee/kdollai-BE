@@ -368,6 +368,127 @@ def make_chats(child):
     )
     chat.save_to_db()
 
+    # 10.05일
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210205",
+        date_Time="오후 9:02",
+        direction="USER",
+        utterance="엄마 아빠 사이가 너무 안좋은 것 같아서 슬퍼."
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210210",
+        date_Time="오후 9:02",
+        direction="BOT",
+        utterance="그래? 부모님께서 싸우셨다고 말한거지?"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210215",
+        date_Time="오후 9:02",
+        direction="USER",
+        utterance="응, 맞아"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210220",
+        date_Time="오후 9:02",
+        direction="BOT",
+        utterance="그렇구나... 부모님이 자주 싸우시니?"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210225",
+        date_Time="오후 9:02",
+        direction="USER",
+        utterance="응, 그런 것 같아"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210230",
+        date_Time="오후 9:02",
+        direction="BOT",
+        utterance="그렇구나... 부모님이 자주 싸우시니?"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210235",
+        date_Time="오후 9:02",
+        direction="USER",
+        utterance="엄마 아빠가 안싸웠으면 좋겠어. 싸우면 내가 마음이 아파."
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210240",
+        date_Time="오후 9:02",
+        direction="BOT",
+        utterance="나도 동현이 마음이 이해돼.... 부모님께서 조금만 덜 싸우면 좋겠는데... 내가 위로해 주고 싶어. 그일 때문에 많이 슬퍼보이는데 맞니?"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210250",
+        date_Time="오후 9:02",
+        direction="USER",
+        utterance="응 맞아."
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210301",
+        date_Time="오후 9:03",
+        direction="BOT",
+        utterance="그랬구나.. 말해줘서 정말 고마워. 너가 슬퍼하는 것 같아서 나도 마음이 너무 아프다.. 혹시 슬픈 상황을 견디는 너만의 방법이 있니?"
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210306",
+        date_Time="오후 9:03",
+        direction="USER",
+        utterance="여기까지만 얘기할게. 고마워 도담아."
+    )
+    chat.save_to_db()
+
+    chat = ChatModel(
+        child_id=child.id,
+        date_YMD="20221105",
+        date_YMDHMS="20221105210311",
+        date_Time="오후 9:03",
+        direction="BOT",
+        utterance="에이.. 아무것도 아니야. 다음에 또 얘기하자!"
+    )
+    chat.save_to_db()
+
     chat = ChatModel(
         child_id=child.id,
         date_YMD="20221106",
