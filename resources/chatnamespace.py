@@ -24,7 +24,7 @@ class ChatNamespace(Namespace):
 
     def on_connect(self):
         print("Client connected")
-        main_ai.set_init()
+
         #sessioned= session.get()
 
     def on_disconnect(self):
@@ -51,6 +51,9 @@ class ChatNamespace(Namespace):
             rooms[self.room] = {"SUPERVISOR":None,"USER":None}
 
         rooms[self.room][self.user_type] = request.sid
+
+        if data['type'] == "USER":
+            main_ai.set_init()
 
         self.child_id = ChildModel.find_by_serial(data['serial_number']).id
 
